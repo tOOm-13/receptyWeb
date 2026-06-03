@@ -1,0 +1,16 @@
+.container{
+    margin: 10px;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card{
+    transition: 0.2s;
+}
+
+.card:hover{
+    transform: translateY(-3px);
+}
