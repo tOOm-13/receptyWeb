@@ -7,7 +7,7 @@
     <title>Domů</title>
 
     <!--Link-->
-    <link rel="stylesheet" href="assets/bootstrap/css/style.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/webfonts/all.min.css">
 
@@ -35,15 +35,21 @@
                             Kategorie
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Snídaně</a></li>
-                            <li><a class="dropdown-item" href="#">Polévky</a></li>
-                            <li><a class="dropdown-item" href="#">Hlavní jídla</a></li>
-                            <li><a class="dropdown-item" href="#">Přílohy</a></li>
-                            <li><a class="dropdown-item" href="#">Zákusky</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="Snídaně" href="#">Snídaně</a>
+                            </li>
+                            <li><a class="dropdown-item category-filter" data-category="Polévky" href="#">Polévky</a>
+                            </li>
+                            <li><a class="dropdown-item category-filter" data-category="Hlavní jídla" href="#">Hlavní
+                                    jídla</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="Přílohy" href="#">Přílohy</a>
+                            </li>
+                            <li><a class="dropdown-item category-filter" data-category="Zákusky" href="#">Zákusky</a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Všehochuť</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="all" href="#">Všechny recepty</a>
+                            </li>
                         </ul>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="#">Oblíbené</a>
@@ -52,80 +58,36 @@
 
                 </ul>
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-outline-primary" type="submit"><i
-                            class="fa-solid fa-magnifying-glass"></i></button>
+                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Hledat recept...">
                 </form>
             </div>
         </div>
     </nav>
 
+    <!--Main-->
     <div class="container mt-4">
         <h1 class="display-5">
             Rodinná kuchařka
         </h1>
     </div>
 
+    <div class="container">
+        <p>
+            Aktuální filtr:
+            <span id="currentCategory" class="badge text-bg-primary">
+                Všechny recepty
+            </span>
+        </p>
+    </div>
+
     <!--Card-->
     <div class="container mt-4">
-        <div class="row g-4">
-
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://d50-a.sdn.cz/d_50/c_img_QN_2/zZ9CA/cesnecka-polevka-cesnekova-polevka.jpeg?fl=cro,168,0,2664,1998%7Cres,1200,,1%7Cjpg,80,,1"
-                        class="card-img-top" alt="Česnečka">
-
-                    <div class="card-body">
-                        <h5 class="card-title">Česnečka</h5>
-                        <p class="card-text">Polévky</p>
-                        <a href="#" class="btn btn-outline-primary">Celý recept</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://static.toprecepty.cz/fotky/recepty/0016/nadychany-pernik-38847-670-377-nw.jpg"
-                        class="card-img-top" alt="Perník">
-
-                    <div class="card-body">
-                        <h5 class="card-title">Perník</h5>
-                        <p class="card-text">Zákusky</p>
-                        <a href="#" class="btn btn-outline-primary">Celý recept</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://static.albert.cz/medias/sys_master/images/h73/ha9/8950413983774.jpg?buildNumber=7224a46dd6e69c0d2357dc801e1625e3358ae6f91d762dca5e4969382ef1cfa5"
-                        class="card-img-top" alt="Karbenátky">
-
-                    <div class="card-body">
-                        <h5 class="card-title">Karbenátky</h5>
-                        <p class="card-text">Hlavní jídla</p>
-                        <a href="#" class="btn btn-outline-primary">Celý recept</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm">
-                    <img src="https://cdn.myshoptet.com/usr/www.madebykristina.cz/user/documents/upload/Recepty/vafle4.jpg"
-                        class="card-img-top" alt="Karbenátky">
-
-                    <div class="card-body">
-                        <h5 class="card-title">Vafle</h5>
-                        <p class="card-text">Snídaně</p>
-                        <a href="#" class="btn btn-outline-primary">Celý recept</a>
-                    </div>
-                </div>
-            </div>
-
+        <div id="recipesContainer" class="row g-4">
         </div>
     </div>
 
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="scipt.js"></script>
 </body>
 
 </html>
