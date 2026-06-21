@@ -1,98 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domů</title>
-
-    <!--Link-->
-    <link rel="stylesheet" href="style.css">
+    <title>Rodinná kuchařka</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/webfonts/all.min.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="bg-light">
 
-    <!--NavBar-->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-        <div class="container-fluid">
-            <span class="navbar-brand"><i class="fa-solid fa-drumstick-bite"></i></span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow-sm">
+        <div class="container-fluid px-3">
+            <span class="navbar-brand fw-bold">
+                <i class="fa-solid fa-drumstick-bite text-warning me-2"></i>Kuchařka
+            </span>
+            
+            <button class="btn btn-warning btn-sm me-2 d-lg-none ms-auto" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
+                <i class="fa-solid fa-plus me-1"></i>Přidat
+            </button>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-3 mb-lg-0 pt-2 pt-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="index.html">Domů</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Kategorie
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item category-filter" data-category="Snídaně" href="#">Snídaně</a>
-                            </li>
-                            <li><a class="dropdown-item category-filter" data-category="Polévky" href="#">Polévky</a>
-                            </li>
-                            <li><a class="dropdown-item category-filter" data-category="Hlavní jídla" href="#">Hlavní
-                                    jídla</a></li>
-                            <li><a class="dropdown-item category-filter" data-category="Přílohy" href="#">Přílohy</a>
-                            </li>
-                            <li><a class="dropdown-item category-filter" data-category="Zákusky" href="#">Zákusky</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item category-filter" data-category="all" href="#">Všechny
-                                    recepty</a>
-                            </li>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item category-filter" data-category="Snídaně" href="#">Snídaně</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="Polévky" href="#">Polévky</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="Hlavní jídla" href="#">Hlavní jídla</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="Přílohy" href="#">Přílohy</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="Zákusky" href="#">Zákusky</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item category-filter" data-category="all" href="#">Všechny recepty</a></li>
                         </ul>
-                    <li class="nav-item">
+                    </li>
                     <li class="nav-item">
                         <a id="favoritesLink" class="nav-link" href="#">
-                            Oblíbené
+                            <i class="fa-solid fa-heart text-danger me-1"></i>Oblíbené
                         </a>
                     </li>
-                    </li>
-                    </li>
-
                 </ul>
-                <form class="d-flex" role="search">
-                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Hledat recept...">
-                </form>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-warning d-none d-lg-block" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
+                        <i class="fa-solid fa-plus me-1"></i>Nový recept
+                    </button>
+                    <form class="d-flex" role="search" onsubmit="return false;">
+                        <input id="searchInput" class="form-control" type="search" placeholder="Hledat recept...">
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!--Main-->
-    <div class="container mt-4">
-        <h1 class="display-5">
-            Rodinná kuchařka
-        </h1>
-    </div>
-
-    <div class="container">
-        <p>
-            Aktuální filtr:
-            <span id="currentCategory" class="badge text-bg-primary">
-                Všechny recepty
-            </span>
+    <div class="container mt-4 px-3">
+        <h1 class="display-6 fw-bold text-secondary">Rodinná kuchařka</h1>
+        <p class="text-muted small">
+            Aktuální filtr: <span id="currentCategory" class="badge bg-primary text-uppercase px-2 py-1.5 ms-1">Všechny recepty</span>
         </p>
     </div>
 
-    <!--Card-->
-    <div class="container mt-4">
-        <div id="recipesContainer" class="row g-4">
+    <div class="container my-3 px-2">
+        <div id="recipesContainer" class="row g-2 g-md-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
+            <div class="col-12 text-center my-5 w-100">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2 text-muted">Načítám dobroty z Google Sheets...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="addRecipeModalLabel">Přidat nový recept</h5>
+                    <button type="button" class="btn-close" data-bs-theme="dark" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addRecipeForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="recipeTitle" class="form-label small fw-bold">Název receptu</label>
+                            <input type="text" class="form-control form-control-lg" id="recipeTitle" required placeholder="Např. Babiččin štrúdl">
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeCategory" class="form-label small fw-bold">Kategorie</label>
+                            <select class="form-select form-control-lg" id="recipeCategory" required>
+                                <option value="Snídaně">Snídaně</option>
+                                <option value="Polévky">Polévky</option>
+                                <option value="Hlavní jídla">Hlavní jídla</option>
+                                <option value="Přílohy">Přílohy</option>
+                                <option value="Zákusky">Zákusky</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeImage" class="form-label small fw-bold">Odkaz na obrázek (URL)</label>
+                            <input type="url" class="form-control" id="recipeImage" required placeholder="https://domena.cz/obrazek.jpg">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                        <button type="submit" id="submitBtn" class="btn btn-success px-4">
+                            <span id="btnText">Uložit do kuchařky</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
-
 </html>

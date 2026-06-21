@@ -1,21 +1,68 @@
-.container{
-    margin: 10px;
+body {
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .card-img-top {
-    height: 200px;
+    height: 140px;
     object-fit: cover;
 }
 
-.card{
-    transition: 0.2s;
+@media (min-width: 768px) {
+    .card-img-top {
+        height: 180px;
+    }
 }
 
-.card:hover{
-    transform: translateY(-3px);
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
 }
 
-.active-category{
+.card:active, .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+
+.active-category {
     font-weight: bold;
-    background-color: #e9ecef;
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.favorite-btn {
+    padding: 8px 12px;
+    font-size: 1.1rem;
+}
+
+.recipe-link {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+}
+
+.modal-body input, .modal-body select {
+    font-size: 16px !important;
+}
+
+/* NOVINKA: Styl pro plovoucí tlačítko smazat na kartě */
+.delete-btn-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.delete-btn-overlay:active {
+    background-color: #ffffff !important;
+    transform: scale(0.9);
 }
