@@ -1,5 +1,5 @@
 // Sem vlož URL svého Google Apps Scriptu!
-const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec";
 
 let recipes = []; // Nyní zcela prázdné, plní se pouze ze Sheetu!
 
@@ -50,17 +50,19 @@ async function fetchRecipes() {
 if (addRecipeForm) {
     addRecipeForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
+
         const submitBtn = document.getElementById("submitBtn");
         const btnText = document.getElementById("btnText");
-        
+
         submitBtn.disabled = true;
         btnText.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Ukládám...`;
 
         const newRecipe = {
             title: document.getElementById("recipeTitle").value,
             category: document.getElementById("recipeCategory").value,
-            image: document.getElementById("recipeImage").value
+            image: document.getElementById("recipeImage").value,
+            ingredients: document.getElementById("recipeIngredients").value, // Přidáno
+            instructions: document.getElementById("recipeInstructions").value // Přidáno
         };
 
         try {
@@ -74,7 +76,7 @@ if (addRecipeForm) {
             addRecipeForm.reset();
             const modalInstance = bootstrap.Modal.getInstance(addModalEl);
             modalInstance.hide();
-            
+
             showLoader("Aktualizuji kuchařku...");
             setTimeout(fetchRecipes, 1500);
 
