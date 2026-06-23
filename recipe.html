@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="assets/webfonts/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow-sm">
@@ -27,11 +29,9 @@
 
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sem vlož TÉŽÉ URL jako v script.js
-        const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec";
 
         async function loadRecipeDetail() {
-            // 1. Získání ID z URL adresy (?id=X)
             const urlParams = new URLSearchParams(window.location.search);
             const recipeId = Number(urlParams.get('id'));
             const container = document.getElementById('recipeDetailContainer');
@@ -39,8 +39,7 @@
             try {
                 const response = await fetch(API_URL);
                 const recipes = await response.json();
-                
-                // 2. Najití správného receptu
+
                 const recipe = recipes.find(r => Number(r.id) === recipeId);
 
                 if (!recipe) {
@@ -48,11 +47,24 @@
                     return;
                 }
 
-                // Aktualizace titulku v liště
                 document.getElementById('navTitle').innerText = recipe.title;
 
-                // 3. Rozsekání ingrediencí a postupu podle středníku
-                const ingredientsHtml = recipe.ingredients 
+                function getFullCategoryName(cat) {
+                    if (!cat) return "Neznámé";
+                    const cleanCat = cat.trim().toUpperCase();
+                    switch (cleanCat) {
+                        case "S": return "Snídaně";
+                        case "P": return "Polévky";
+                        case "H": return "Hlavní jídla";
+                        case "PR": return "Přílohy";
+                        case "Z": return "Zákusky";
+                        default: return cat;
+                    }
+                }
+
+                const fullCategory = getFullCategoryName(recipe.category);
+
+                const ingredientsHtml = recipe.ingredients
                     ? recipe.ingredients.split(';').map(ing => `<li class="list-group-item py-2"><i class="fa-solid fa-check text-success me-2"></i>${ing.trim()}</li>`).join('')
                     : '<li class="list-group-item text-muted">Žádné ingredience nebyly zadány.</li>';
 
@@ -64,13 +76,12 @@
                         </div>`).join('')
                     : '<p class="text-muted">Žádný postup nebyl zadán.</p>';
 
-                // 4. Vykreslení mobilního detailu
                 container.innerHTML = `
                     <div class="row g-4">
                         <div class="col-12 col-md-5">
                             <img src="${recipe.image}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 250px;" alt="${recipe.title}">
                             <div class="mt-2">
-                                <span class="badge bg-primary text-uppercase">${recipe.category}</span>
+                                <span class="badge bg-primary text-uppercase">${fullCategory}</span>
                             </div>
                         </div>
                         
@@ -99,4 +110,5 @@
         loadRecipeDetail();
     </script>
 </body>
+
 </html>

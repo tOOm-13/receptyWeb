@@ -1,7 +1,6 @@
-// Sem vlož URL svého Google Apps Scriptu!
 const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec";
 
-let recipes = []; // Nyní zcela prázdné, plní se pouze ze Sheetu!
+let recipes = []; 
 
 // DOM Elementy
 const container = document.getElementById("recipesContainer");
@@ -30,7 +29,21 @@ function closeMobileNavbar() {
     }
 }
 
-// 1. FUNKCE: Načtení receptů
+// Pomocná funkce pro převod zkratek na plný název
+function getFullCategoryName(cat) {
+    if (!cat) return "Neznámé";
+    const cleanCat = cat.trim().toUpperCase();
+    switch (cleanCat) {
+        case "S": return "Snídaně";
+        case "P": return "Polévky";
+        case "H": return "Hlavní jídla";
+        case "PR": return "Přílohy";
+        case "Z": return "Zákusky";
+        default: return cat; 
+    }
+}
+
+// FUNKCE: Načtení receptů z Google Sheets
 async function fetchRecipes() {
     try {
         const response = await fetch(API_URL);
@@ -46,7 +59,7 @@ async function fetchRecipes() {
     }
 }
 
-// 2. FUNKCE: Přidání receptu
+// FUNKCE: Přidání nového receptu (Ukládá do Sheetu zkratky)
 if (addRecipeForm) {
     addRecipeForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -57,12 +70,19 @@ if (addRecipeForm) {
         submitBtn.disabled = true;
         btnText.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Ukládám...`;
 
+        const formCategory = document.getElementById("recipeCategory").value;
+        let shortCategory = "H";
+        if (formCategory === "Snídaně") shortCategory = "S";
+        if (formCategory === "Polévky") shortCategory = "P";
+        if (formCategory === "Přílohy") shortCategory = "PR";
+        if (formCategory === "Zákusky") shortCategory = "Z";
+
         const newRecipe = {
             title: document.getElementById("recipeTitle").value,
-            category: document.getElementById("recipeCategory").value,
+            category: shortCategory, 
             image: document.getElementById("recipeImage").value,
-            ingredients: document.getElementById("recipeIngredients").value, // Přidáno
-            instructions: document.getElementById("recipeInstructions").value // Přidáno
+            ingredients: document.getElementById("recipeIngredients").value,
+            instructions: document.getElementById("recipeInstructions").value
         };
 
         try {
@@ -90,17 +110,17 @@ if (addRecipeForm) {
     });
 }
 
-// 3. FUNKCE: Bezpečné smazání receptu pomocí PINu
+// FUNKCE: Smazání receptu
 async function deleteRecipe(id) {
     const pin = prompt("Zadej rodinný PIN kód pro smazání receptu:");
-    if (!pin) return; // Uživatel stornoval zadání
+    if (!pin) return; 
 
     showLoader("Mažu recept...");
 
     try {
-        const response = await fetch(API_URL, {
+        await fetch(API_URL, {
             method: "POST",
-            mode: "no-cors", // Kvůli politice Google Scriptů posíláme bez CORS, zpracování proběhne na pozadí
+            mode: "no-cors", 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 action: "DELETE",
@@ -108,11 +128,7 @@ async function deleteRecipe(id) {
                 pin: pin
             })
         });
-
-        // Protože režim no-cors nevrací čitelnou odpověď do JS, 
-        // pro jistotu hned aktualizujeme seznam z databáze, abychom viděli výsledek.
         setTimeout(fetchRecipes, 1500);
-
     } catch (error) {
         alert("Chyba při komunikaci se serverem.");
         console.error(error);
@@ -128,9 +144,10 @@ function showLoader(text) {
         </div>`;
 }
 
-// Vylepšená karta receptu s tlačítkem smazat (koš) v horním rohu
+// FUNKCE: Vytvoření karty receptu
 function createCard(recipe) {
     const isFavorite = favorites.includes(Number(recipe.id));
+    const fullCategory = getFullCategoryName(recipe.category); 
 
     return `
         <div class="col">
@@ -142,7 +159,7 @@ function createCard(recipe) {
                 <img src="${recipe.image}" class="card-img-top" alt="${recipe.title}" loading="lazy">
                 <div class="card-body p-2 p-md-3 d-flex flex-column justify-content-between">
                     <div>
-                        <span class="badge bg-light text-dark border mb-1 small d-none d-sm-inline-block">${recipe.category}</span>
+                        <span class="badge bg-light text-dark border mb-1 small d-none d-sm-inline-block">${fullCategory}</span>
                         <h6 class="card-title fw-bold text-dark text-truncate mb-2">${recipe.title}</h6>
                     </div>
                     <div class="d-flex gap-1 mt-auto">
@@ -159,12 +176,17 @@ function createCard(recipe) {
     `;
 }
 
+// FUNKCE: Filtrování (Chytře porovnává zkratku i plný název)
 function filterRecipes() {
     const searchValue = normalizeText(searchInput.value);
 
     const filtered = recipes.filter(recipe => {
         const matchesSearch = normalizeText(recipe.title).includes(searchValue);
-        const matchesCategory = selectedCategory === "all" || recipe.category === selectedCategory;
+        
+        // Zde porovnáváme vybraný filtr buď přímo se zkratkou, nebo s plným názvem z pomocné funkce
+        const fullCategory = getFullCategoryName(recipe.category);
+        const matchesCategory = selectedCategory === "all" || recipe.category === selectedCategory || fullCategory === selectedCategory;
+        
         const matchesFavorites = !showOnlyFavorites || favorites.includes(Number(recipe.id));
 
         return matchesSearch && matchesCategory && matchesFavorites;
