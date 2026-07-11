@@ -5,51 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail receptu</title>
-    
-    <!-- Google Fonts a Preconnect pro rodinná písma -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/webfonts/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="bg-light">
 
-    <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-sm">
-        <div class="container-fluid px-3 d-flex align-items-center justify-content-between">
-            <a class="btn btn-glass-secondary btn-sm fw-bold" href="index.html">
-                <i class="fa-solid fa-arrow-left me-1"></i> Zpět domů
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow-sm">
+        <div class="container-fluid px-3">
+            <a class="btn btn-outline-light btn-sm me-2" href="index.html">
+                <i class="fa-solid fa-arrow-left me-1"></i> Zpět
             </a>
-            <span class="navbar-brand navbar-brand-gradient mx-auto text-truncate" id="navTitle">Načítám dobroty...</span>
-            <div style="width: 100px;"></div> <!-- Vyrovnání centrovaného nadpisu -->
+            <span class="navbar-brand fw-bold mx-auto text-truncate" id="navTitle">Načítám...</span>
         </div>
     </nav>
 
     <div class="container my-4 px-3" id="recipeDetailContainer">
-        <!-- Vykreslení moderního rodinného skeletonu -->
-        <div class="text-center my-5 py-5 text-secondary">
-            <div class="spinner-border text-warning" role="status"></div>
-            <p class="mt-2 small fw-bold">Otvírám rodinnou kuchařku...</p>
+        <div class="text-center my-5">
+            <div class="spinner-border text-primary" role="status"></div>
         </div>
     </div>
 
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Spuštění inicializace velikosti písma a motivu
-        function initFontSize() {
-            const savedSize = localStorage.getItem('fontSize') || 'md';
-            const htmlEl = document.documentElement;
-            htmlEl.classList.remove('font-size-sm', 'font-size-md', 'font-size-lg');
-            htmlEl.classList.add(`font-size-${savedSize}`);
-        }
-        initFontSize();
-
         const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec";
-        let printQueue = JSON.parse(localStorage.getItem("printQueue")) || [];
-        window.currentRecipe = null;
 
         async function loadRecipeDetail() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -61,29 +41,23 @@
                 const recipes = await response.json();
 
                 const recipe = recipes.find(r => Number(r.id) === recipeId);
-                window.currentRecipe = recipe;
 
                 if (!recipe) {
-                    container.innerHTML = `
-                        <div class="alert alert-danger border-0 rounded-4 shadow-sm p-4 text-center my-4">
-                            <i class="fa-solid fa-circle-exclamation fa-2x mb-2 text-danger"></i>
-                            <h5 class="fw-bold">Tento receptík jsme v kuchařce nenašli 😢</h5>
-                            <a href="index.html" class="btn btn-sm btn-gradient mt-3">Zpět na hlavní stránku</a>
-                        </div>`;
+                    container.innerHTML = `<div class="alert alert-danger">Recept nebyl nalezen.</div>`;
                     return;
                 }
 
                 document.getElementById('navTitle').innerText = recipe.title;
 
                 function getFullCategoryName(cat) {
-                    if (!cat) return "🍳 Neznámé";
+                    if (!cat) return "Neznámé";
                     const cleanCat = cat.trim().toUpperCase();
                     switch (cleanCat) {
-                        case "S": return "🥞 Snídaně";
-                        case "P": return "🍜 Polévky";
-                        case "H": return "🍗 Hlavní jídla";
-                        case "PR": return "🥔 Přílohy";
-                        case "Z": return "🍰 Zákusky";
+                        case "S": return "Snídaně";
+                        case "P": return "Polévky";
+                        case "H": return "Hlavní jídla";
+                        case "PR": return "Přílohy";
+                        case "Z": return "Zákusky";
                         default: return cat;
                     }
                 }
@@ -91,114 +65,45 @@
                 const fullCategory = getFullCategoryName(recipe.category);
 
                 const ingredientsHtml = recipe.ingredients
-                    ? recipe.ingredients.split(';').map(ing => `
-                        <div class="ingredient-checkbox" onclick="toggleIngredient(this)">
-                            <i class="fa-regular fa-square me-3 text-secondary checkbox-icon"></i>
-                            <span>${ing.trim()}</span>
-                        </div>`).join('')
-                    : '<div class="text-secondary p-3 text-center small">Žádné ingredience nebyly zadány.</div>';
+                    ? recipe.ingredients.split(';').map(ing => `<li class="list-group-item py-2"><i class="fa-solid fa-check text-success me-2"></i>${ing.trim()}</li>`).join('')
+                    : '<li class="list-group-item text-muted">Žádné ingredience nebyly zadány.</li>';
 
                 const instructionsHtml = recipe.instructions
                     ? recipe.instructions.split(';').map((inst, index) => `
-                        <div class="direction-step-card">
-                            <div class="direction-step-num">${index + 1}</div>
-                            <p class="mb-0 fs-6" style="line-height: 1.6; color: var(--text-primary); font-weight: 600;">${inst.trim()}</p>
+                        <div class="d-flex mb-3 align-items-start">
+                            <span class="badge bg-secondary rounded-circle me-3 mt-1 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; min-width: 28px;">${index + 1}</span>
+                            <p class="mb-0 fs-5">${inst.trim()}</p>
                         </div>`).join('')
-                    : '<div class="text-secondary p-3 text-center small">Žádný postup nebyl zadán.</div>';
+                    : '<p class="text-muted">Žádný postup nebyl zadán.</p>';
 
                 container.innerHTML = `
                     <div class="row g-4">
-                        <div class="col-12 col-lg-5">
-                            <div class="hero-image-container">
-                                <div class="hero-image-blur" style="background-image: url('${recipe.image}')"></div>
-                                <img src="${recipe.image}" class="hero-image-front" alt="${recipe.title}">
-                            </div>
-                            <div class="mt-3 d-flex align-items-center gap-2">
-                                <span class="recipe-badge mb-0 px-3 py-2 fw-bold text-center flex-grow-1" style="height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--btn-radius);">
-                                    ${fullCategory}
-                                </span>
-                                <button class="btn btn-glass-secondary btn-sm d-flex align-items-center justify-content-center" style="height: 42px; border-radius: var(--btn-radius); min-width: 120px;" onclick="toggleSinglePrintQueue(${recipe.id})" id="btnDetailPrint">
-                                    <i class="fa-solid fa-print me-1"></i> Přidat k tisku
-                                </button>
+                        <div class="col-12 col-md-5">
+                            <img src="${recipe.image}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 250px;" alt="${recipe.title}">
+                            <div class="mt-2">
+                                <span class="badge bg-primary text-uppercase">${fullCategory}</span>
                             </div>
                         </div>
                         
-                        <div class="col-12 col-lg-7">
-                            <h1 class="display-6 fw-bold mb-4" style="color: var(--text-primary); letter-spacing: -0.5px;">${recipe.title} 🍲</h1>
+                        <div class="col-12 col-md-7">
+                            <h1 class="display-6 fw-bold text-dark mb-3">${recipe.title}</h1>
                             
-                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-                                <i class="fa-solid fa-basket-shopping text-warning"></i>
-                                <span>Co budeme potřebovat (Ingredience)</span>
-                            </h4>
-                            <p class="text-secondary small mb-3">👇 Kliknutím na ingredienci si ji odškrtneš, až ji připravíš!</p>
-                            <div class="d-flex flex-column gap-1 mb-4">
+                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3"><i class="fa-solid fa-basket-shopping me-2"></i>Ingredience</h4>
+                            <ul class="list-group list-group-flush mb-4 shadow-sm rounded">
                                 ${ingredientsHtml}
-                            </div>
+                            </ul>
                             
-                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3 d-flex align-items-center gap-2">
-                                <i class="fa-solid fa-kitchen-set text-warning"></i>
-                                <span>Jak budeme postupovat (Postup)</span>
-                            </h4>
-                            <div>
+                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3"><i class="fa-solid fa-kitchen-set me-2"></i>Postup přípravy</h4>
+                            <div class="px-2">
                                 ${instructionsHtml}
                             </div>
                         </div>
                     </div>
                 `;
 
-                // Aktualizace stavu tlačítka tisku
-                updateDetailPrintBtn(recipe.id);
-
             } catch (error) {
                 console.error(error);
-                container.innerHTML = `
-                    <div class="alert alert-danger border-0 rounded-4 shadow-sm p-4 text-center my-4">
-                        <i class="fa-solid fa-circle-exclamation fa-2x mb-2 text-danger"></i>
-                        <h5 class="fw-bold">Nepodařilo se nám receptík načíst 😢</h5>
-                        <p class="text-secondary small">Zkontrolujte připojení k internetu a zkuste to znovu.</p>
-                        <a href="index.html" class="btn btn-sm btn-gradient mt-3">Zpět na přehled</a>
-                    </div>`;
-            }
-        }
-
-        // Třída pro odškrtávání ingrediencí
-        function toggleIngredient(element) {
-            element.classList.toggle("checked");
-            const icon = element.querySelector(".checkbox-icon");
-            if (element.classList.contains("checked")) {
-                icon.className = "fa-solid fa-square-check me-3 text-success checkbox-icon";
-            } else {
-                icon.className = "fa-regular fa-square me-3 text-secondary checkbox-icon";
-            }
-        }
-
-        // Správa tiskové fronty na detailu
-        function toggleSinglePrintQueue(id) {
-            const isAdded = printQueue.some(r => Number(r.id) === Number(id));
-            if (isAdded) {
-                printQueue = printQueue.filter(r => Number(r.id) !== Number(id));
-            } else {
-                const recipe = window.currentRecipe;
-                if (recipe) {
-                    printQueue.push(recipe);
-                }
-            }
-            localStorage.setItem("printQueue", JSON.stringify(printQueue));
-            updateDetailPrintBtn(id);
-        }
-
-        function updateDetailPrintBtn(id) {
-            const btn = document.getElementById("btnDetailPrint");
-            if (!btn) return;
-            const isAdded = printQueue.some(r => Number(r.id) === Number(id));
-            if (isAdded) {
-                btn.className = "btn btn-warning btn-sm fw-bold d-flex align-items-center justify-content-center";
-                btn.innerHTML = `<i class="fa-solid fa-print me-1"></i> Ve frontě`;
-                btn.style.borderRadius = "var(--btn-radius)";
-            } else {
-                btn.className = "btn btn-glass-secondary btn-sm d-flex align-items-center justify-content-center";
-                btn.innerHTML = `<i class="fa-solid fa-print me-1"></i> K tisku`;
-                btn.style.borderRadius = "var(--btn-radius)";
+                container.innerHTML = `<div class="alert alert-danger">Chyba při načítání detailu receptu.</div>`;
             }
         }
 
