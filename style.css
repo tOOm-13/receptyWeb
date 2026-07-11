@@ -1,114 +1,292 @@
-/* --- GLOBÁLNÍ STYLY --- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* --- CUSTOM DESIGN SYSTEM VARIABLES --- */
+:root {
+    --primary: #FF5A5F;       /* Warm Coral Red */
+    --primary-hover: #E0484D;
+    --primary-light: #FFECEE;
+    --secondary: #00A699;     /* Soft Culinary Teal */
+    --accent: #FFB000;        /* Honey Amber */
+    --bg-color: #FAF9F6;      /* Off-white soft cream */
+    --card-bg: #FFFFFF;
+    --text-main: #222222;
+    --text-muted: #717171;
+    --border-color: #EBEBEB;
+    --shadow-soft: 0 4px 18px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.08);
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* --- GLOBAL STYLES --- */
 body {
+    background-color: var(--bg-color);
+    font-family: var(--font-main);
+    color: var(--text-main);
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* --- KARTY RECEPTŮ (OBECNÉ/DESKTOP) --- */
-.card-img-top {
-    height: 140px;
-    object-fit: cover;
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
 }
 
-@media (min-width: 768px) {
-    .card-img-top {
-        height: 180px;
-    }
+/* --- NAVIGATION BAR --- */
+.navbar {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 0;
 }
 
-.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: none;
+.navbar-brand {
+    color: var(--text-main) !important;
+    letter-spacing: -0.5px;
 }
 
-.card:active,
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
-.favorite-btn {
-    padding: 8px 12px;
-    font-size: 1.1rem;
+.nav-link:hover, .nav-link.active {
+    color: var(--primary) !important;
 }
 
-.recipe-link {
-    font-size: 0.9rem;
-    padding: 8px 10px;
+/* Search bar styling */
+.search-container {
+    position: relative;
 }
 
-/* --- PŘEKYVNÁ TLAČÍTKA NA FOTCE (DESKTOP) --- */
-.delete-btn-overlay {
+.search-container input {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding-left: 40px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.search-container input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.search-icon {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+/* --- RECEPTY KARTY --- */
+.recipe-card {
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border-color) !important;
+    background: var(--card-bg);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+}
+
+.recipe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover) !important;
+}
+
+.img-wrapper {
+    position: relative;
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.recipe-card img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.recipe-card:hover img {
+    transform: scale(1.06);
+}
+
+/* Overlay Buttons on Images */
+.delete-btn-overlay, .print-btn-overlay {
+    position: absolute;
     z-index: 10;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+    padding: 0 !important;
+}
+
+.delete-btn-overlay {
+    top: 10px;
+    left: 10px;
+    color: var(--text-muted) !important;
+}
+
+.delete-btn-overlay:hover {
+    color: #dc3545 !important;
+    background: #ffffff !important;
+    transform: scale(1.1);
 }
 
 .print-btn-overlay {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 10;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
+    top: 10px;
+    right: 10px;
+    color: var(--text-muted) !important;
 }
 
-.delete-btn-overlay:hover,
 .print-btn-overlay:hover {
-    opacity: 1;
+    color: var(--secondary) !important;
+    background: #ffffff !important;
+    transform: scale(1.1);
 }
 
-/* --- MODÁLNÍ OKNO --- */
-.modal-body input,
-.modal-body select {
-    font-size: 16px !important;
+.print-btn-overlay.btn-warning {
+    background: var(--accent) !important;
+    color: white !important;
+    border-color: var(--accent) !important;
 }
 
-/* --- MODERNÍ FILTRY (PC / TABLET) --- */
+/* --- FILTRY CATEGORIES (AIRBNB STYLE) --- */
 .filter-scroll-container {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap; /* Na PC se filtry řadí hezky vedle sebe a zalamují se */
-    padding: 15px 0;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 20px 0;
 }
 
 .filter-badge {
-    background: #f8f9fa;
-    color: #4b5563;
-    border: 1px solid #dee2e6;
-    padding: 8px 18px;
-    border-radius: 20px;
+    background: #FFFFFF;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 10px 22px;
+    border-radius: var(--radius-lg);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     user-select: none;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
-/* Aktivní stav pro vybraný filtr */
+.filter-badge:hover {
+    border-color: var(--text-muted);
+    color: var(--text-main);
+}
+
 .filter-badge.active-category, 
 .filter-badge.active {
-    background: #0d6efd !important;
+    background: var(--primary) !important;
     color: #ffffff !important;
-    border-color: #0d6efd !important;
-    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+    border-color: var(--primary) !important;
+    box-shadow: 0 4px 14px rgba(255, 90, 95, 0.25) !important;
 }
 
-/* --- MOBILNÍ ÚPRAVA (Do šířky 576px) --- */
-@media (max-width: 576px) {
+/* --- MOBILE BOTTOM NAVIGATION --- */
+.mobile-bottom-nav {
+    display: none;
+}
 
-    /* Posuvná lišta filtrů na mobilu (Airbnb styl) */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 80px; /* Space for the bottom bar */
+    }
+
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 65px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border-color);
+        z-index: 1000;
+        justify-content: space-around;
+        align-items: center;
+        padding: 5px 10px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .mobile-bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 500;
+        background: none;
+        border: none;
+        padding: 5px;
+        transition: color 0.2s ease;
+        position: relative;
+    }
+
+    .mobile-bottom-nav-item i {
+        font-size: 20px;
+        margin-bottom: 3px;
+    }
+
+    .mobile-bottom-nav-item.active {
+        color: var(--primary);
+    }
+
+    /* Floating center action button on mobile nav */
+    .mobile-fab-item {
+        width: 48px;
+        height: 48px;
+        background: var(--primary);
+        color: white !important;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+        margin-top: -20px;
+        border: 4px solid var(--bg-color);
+        transition: transform 0.2s ease;
+    }
+
+    .mobile-fab-item i {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
+    .mobile-fab-item:active {
+        transform: scale(0.95);
+    }
+
+    /* Horizontal categories scroll for mobile */
     .filter-scroll-container {
-        flex-wrap: nowrap; /* Zakáže zalamování pod sebe */
-        overflow-x: auto;  /* Aktivuje posun prstem do stran */
-        padding: 10px 4px;
-        margin-right: -15px; /* Roztažení lišty na okraje displeje */
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 12px 4px;
+        margin-right: -15px;
         margin-left: -15px;
         padding-left: 15px;
         padding-right: 15px;
@@ -116,68 +294,92 @@ body {
         -webkit-overflow-scrolling: touch;
     }
     
-    /* Skrytí scrollbaru na mobilech */
     .filter-scroll-container::-webkit-scrollbar {
         display: none;
     }
+}
 
-    /* Mřížka receptů pro mobil */
-    .recipe-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 8px;
-    }
+/* --- MODALS --- */
+.modal-content {
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+}
 
-    /* Úprava mobilní karty receptu */
-    .recipe-card {
-        border-radius: 12px !important;
-        overflow: hidden;
-        border: 1px solid #e9ecef !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 24px;
+}
 
-    /* Kulatá skleněná tlačítka na fotce v rozích pro mobily */
-    .delete-btn-overlay {
-        left: 8px !important;
-        top: 8px !important;
-    }
-    
-    .print-btn-overlay {
-        right: 8px !important;
-        top: 8px !important;
-    }
+.modal-body {
+    padding: 24px;
+}
 
-    .delete-btn-overlay, 
-    .print-btn-overlay {
-        position: absolute;
-        z-index: 5;
-        width: 34px;
-        height: 34px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50% !important;
-        border: none !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-        padding: 0 !important;
-        background: rgba(255, 255, 255, 0.9) !important;
-        backdrop-filter: blur(4px);
-        color: #333 !important;
-    }
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 16px 24px;
+}
 
-    .delete-btn-overlay:hover {
-        color: #dc3545 !important;
-    }
+.form-control, .form-select {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    padding: 10px 14px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
 
-    .print-btn-overlay:hover {
-        color: #0d6efd !important;
-    }
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-light);
+}
 
-    /* Hlavní akční tlačítko pro palec */
-    .recipe-card .btn-primary-action {
-        padding: 12px;
-        font-size: 16px;
-        font-weight: 600;
-        border-radius: 12px;
-    }
+.btn-primary-action {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary-action:hover, .btn-primary-action:active {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* Detail page styling custom classes */
+.recipe-hero-img {
+    height: 320px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+}
+
+.recipe-meta-badge {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.step-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.step-card:hover {
+    border-color: var(--primary-light);
+    background: var(--bg-color);
 }

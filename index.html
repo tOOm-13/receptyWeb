@@ -10,110 +10,141 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow-sm">
-        <div class="container-fluid px-3">
-            <span class="navbar-brand fw-bold">
-                <i class="fa-solid fa-drumstick-bite text-warning me-2"></i>Kuchařka
+    <!-- NAV BAR FOR TABLET/DESKTOP -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container px-3">
+            <span class="navbar-brand fw-bold fs-4 d-flex align-items-center">
+                <i class="fa-solid fa-utensils text-danger me-2"></i> Kuchařka
             </span>
 
-            <div class="d-flex gap-2 ms-auto d-lg-none align-items-center">
-                <button id="clearPrintBtnMobile" class="btn btn-outline-danger btn-sm d-none" onclick="clearPrintQueue()" title="Vyčistit tiskovou frontu">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-                <a href="print.html" id="printNavBtnMobile" class="btn btn-outline-warning btn-sm d-none">
-                    <i class="fa-solid fa-print"></i>
-                </a>
-                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-
-            <button class="navbar-toggler border-0 ms-2" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-3 mb-lg-0 pt-2 pt-lg-0">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="index.html">Domů</a>
                     </li>
                     <li class="nav-item">
-                        <a id="favoritesLink" class="nav-link" href="#">
-                            <i class="fa-solid fa-heart text-danger me-1"></i>Oblíbené
+                        <a id="favoritesLink" class="nav-link d-flex align-items-center" href="#">
+                            <i class="fa-solid fa-heart text-danger me-1"></i> Oblíbené
                         </a>
                     </li>
                 </ul>
 
-                <div class="d-flex gap-2 align-items-center">
+                <div class="d-flex gap-3 align-items-center">
                     <button id="clearPrintBtn" class="btn btn-outline-danger btn-sm d-none" onclick="clearPrintQueue()">
                         <i class="fa-solid fa-trash-can me-1"></i> Vyčistit frontu
                     </button>
-                    <a href="print.html" id="printNavBtn" class="btn btn-outline-warning btn-sm d-none">
+                    <a href="print.html" id="printNavBtn" class="btn btn-outline-warning btn-sm d-none fw-semibold">
                         <i class="fa-solid fa-print me-1"></i> Tisková fronta (0)
                     </a>
-                    <button class="btn btn-warning d-none d-lg-block" data-bs-toggle="modal"
+                    <button class="btn btn-primary-action btn-sm" data-bs-toggle="modal"
                         data-bs-target="#addRecipeModal">
-                        <i class="fa-solid fa-plus me-1"></i>Nový recept
+                        <i class="fa-solid fa-plus me-1"></i> Nový recept
                     </button>
-                    <form class="d-flex m-0" role="search" onsubmit="return false;">
-                        <input id="searchInput" class="form-control" type="search" placeholder="Hledat recept...">
-                    </form>
                 </div>
+            </div>
+
+            <!-- SEARCH BAR IN NAVBAR (Visible everywhere) -->
+            <div class="ms-auto ms-lg-3 search-container" style="min-width: 200px;">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input id="searchInput" class="form-control" type="search" placeholder="Hledat recept...">
             </div>
         </div>
     </nav>
 
+    <!-- HERO HEADER -->
     <div class="container mt-4 px-3">
-        <h1 class="display-6 fw-bold text-secondary mb-1">Rodinná kuchařka</h1>
+        <h1 class="display-5 fw-bold text-dark mb-1" style="letter-spacing: -1px;">Rodinná kuchařka</h1>
         <p class="text-muted small mb-0">
-            Aktuální filtr: <span id="currentCategory" class="badge bg-primary text-uppercase px-2 py-1 ms-1">Všechny recepty</span>
+            Aktuální filtr: <span id="currentCategory"
+                class="badge bg-light text-dark border px-2 py-1 ms-1 text-uppercase fw-bold">Všechny recepty</span>
         </p>
     </div>
 
+    <!-- HORIZONTAL FILTER BAR (Airbnb style scroll) -->
     <div class="container px-3">
         <div class="filter-scroll-container">
-            <div class="filter-badge active active-category" data-category="all">Vše</div>
-            <div class="filter-badge" data-category="Snídaně">Snídaně</div>
-            <div class="filter-badge" data-category="Polévky">Polévky</div>
-            <div class="filter-badge" data-category="Hlavní jídla">Hlavní jídla</div>
-            <div class="filter-badge" data-category="Přílohy">Přílohy</div>
-            <div class="filter-badge" data-category="Zákusky">Zákusky</div>
+            <div class="filter-badge active active-category" data-category="all">
+                <i class="fa-solid fa-border-all"></i> Vše
+            </div>
+            <div class="filter-badge" data-category="Snídaně">
+                <i class="fa-solid fa-bread-slice"></i> Snídaně
+            </div>
+            <div class="filter-badge" data-category="Polévky">
+                <i class="fa-solid fa-spoon"></i></i> Polévky
+            </div>
+            <div class="filter-badge" data-category="Hlavní jídla">
+                <i class="fa-solid fa-bowl-food"></i> Hlavní jídla
+            </div>
+            <div class="filter-badge" data-category="Přílohy">
+                <i class="fa-solid fa-wheat-awn"></i> Přílohy
+            </div>
+            <div class="filter-badge" data-category="Zákusky">
+                <i class="fa-solid fa-cake-candles"></i> Zákusky
+            </div>
             <div class="filter-badge" id="mobileFavoritesBtn" data-category="favorites">
-                <i class="fa-solid fa-heart text-danger me-1"></i>Oblíbené
+                <i class="fa-solid fa-heart text-danger"></i> Oblíbené
             </div>
         </div>
     </div>
 
+    <!-- RECIPES CONTAINER -->
     <div class="container my-3 px-2">
-        <div id="recipesContainer" class="row g-2 g-md-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
+        <div id="recipesContainer" class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
             <div class="col-12 text-center my-5 w-100">
-                <div class="spinner-border text-primary" role="status"></div>
+                <div class="spinner-border text-danger" role="status"></div>
                 <p class="mt-2 text-muted">Načítám dobroty z Google Sheets...</p>
             </div>
         </div>
     </div>
 
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <div class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-bottom-nav-item active" id="mobileHomeNav">
+            <i class="fa-solid fa-house"></i>
+            <span>Domů</span>
+        </a>
+        <a href="#" id="mobileFavNav" class="mobile-bottom-nav-item">
+            <i class="fa-solid fa-heart"></i>
+            <span>Oblíbené</span>
+        </a>
+        <button class="mobile-bottom-nav-item mobile-fab-item" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+        <a href="print.html" id="mobilePrintNav" class="mobile-bottom-nav-item position-relative">
+            <i class="fa-solid fa-print"></i>
+            <span>Tisk</span>
+            <span id="mobilePrintBadge" class="badge bg-danger rounded-circle position-absolute"
+                style="font-size: 8px; padding: 2px 4px; top: 2px; right: 8px; display: none;">0</span>
+        </a>
+        <button class="mobile-bottom-nav-item"
+            onclick="document.getElementById('searchInput').focus(); window.scrollTo({top: 0, behavior: 'smooth'});">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Hledat</span>
+        </button>
+    </div>
+
+    <!-- MODAL: ADD RECIPE -->
     <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
-                <div class="modal-header bg-dark text-white" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-white">
                     <h5 class="modal-title fw-bold" id="addRecipeModalLabel">Přidat nový recept</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="addRecipeForm">
-                    <div class="modal-body p-4">
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label for="recipeTitle" class="form-label small fw-bold text-secondary">Název receptu</label>
-                            <input type="text" class="form-control form-control-lg fs-6" id="recipeTitle" required
+                            <label for="recipeTitle" class="form-label small fw-bold text-secondary">Název
+                                receptu</label>
+                            <input type="text" class="form-control" id="recipeTitle" required
                                 placeholder="Např. Babiččin štrúdl" maxlength="50">
                         </div>
                         <div class="mb-3">
-                            <label for="recipeCategory" class="form-label small fw-bold text-secondary">Kategorie</label>
-                            <select class="form-select form-control-lg fs-6" id="recipeCategory" required>
+                            <label for="recipeCategory"
+                                class="form-label small fw-bold text-secondary">Kategorie</label>
+                            <select class="form-select" id="recipeCategory" required>
                                 <option value="Snídaně">Snídaně</option>
                                 <option value="Polévky">Polévky</option>
                                 <option value="Hlavní jídla" selected>Hlavní jídla</option>
@@ -122,32 +153,37 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="recipeImage" class="form-label small fw-bold text-secondary">Odkaz na obrázek (URL)</label>
-                            <input type="url" class="form-control fs-6" id="recipeImage" required
+                            <label for="recipeImage" class="form-label small fw-bold text-secondary">Odkaz na obrázek
+                                (URL)</label>
+                            <input type="url" class="form-control" id="recipeImage" required
                                 placeholder="https://domena.cz/obrazek.jpg">
                         </div>
                         <div class="mb-3">
-                            <label for="recipeIngredients" class="form-label small fw-bold text-secondary">Ingredience (odděluj středníkem `;`)</label>
-                            <textarea class="form-control fs-6" id="recipeIngredients" rows="2" required
+                            <label for="recipeIngredients" class="form-label small fw-bold text-secondary">Ingredience
+                                (odděluj středníkem `;`)</label>
+                            <textarea class="form-control" id="recipeIngredients" rows="2" required
                                 placeholder="mouka 500g; 2 vejce; mléko 1l"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="recipeInstructions" class="form-label small fw-bold text-secondary">Postup (odděluj středníkem `;`)</label>
-                            <textarea class="form-control fs-6" id="recipeInstructions" rows="3" required
+                            <label for="recipeInstructions" class="form-label small fw-bold text-secondary">Postup
+                                (odděluj středníkem `;`)</label>
+                            <textarea class="form-control" id="recipeInstructions" rows="3" required
                                 placeholder="Smíchej suroviny; Upeč v troubě na 180°C"></textarea>
                         </div>
-                        
+
                         <div class="mb-2 p-3 bg-light border rounded-3">
                             <label for="recipePin" class="form-label small fw-bold text-danger">
                                 <i class="fa-solid fa-lock me-1"></i> Rodinný PIN kód pro zápis
                             </label>
-                            <input type="password" class="form-control text-center fw-bold form-control-lg" id="recipePin" required
-                                placeholder="••••" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+                            <input type="password" class="form-control text-center fw-bold form-control-lg"
+                                id="recipePin" required placeholder="••••" inputmode="numeric" pattern="[0-9]*"
+                                maxlength="4" autocomplete="off">
                         </div>
                     </div>
-                    <div class="modal-footer bg-light p-3" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
-                        <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">Zrušit</button>
-                        <button type="submit" id="submitBtn" class="btn btn-success px-4 fw-bold">
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary px-3"
+                            data-bs-dismiss="modal">Zrušit</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary-action px-4">
                             <span id="btnText">Uložit do kuchařky</span>
                         </button>
                     </div>
@@ -156,24 +192,29 @@
         </div>
     </div>
 
+    <!-- MODAL: DELETE CONFIRMATION -->
     <div class="modal fade" id="deletePinModal" tabindex="-1" aria-labelledby="deletePinModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
-                <div class="modal-header bg-danger text-white p-3" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
-                    <h6 class="modal-title fw-bold" id="deletePinModalLabel">
-                        <i class="fa-solid fa-trash-can me-2"></i>Smazat recept?
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold text-danger" id="deletePinModalLabel">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>Smazat recept?
                     </h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="deleteRecipeForm">
-                    <div class="modal-body text-center p-3">
-                        <p class="text-muted small mb-3">Tato akce je nevratná. Zadejte rodinný PIN kód pro potvrzení:</p>
-                        <input type="password" class="form-control text-center fw-bold form-control-lg" id="deletePinInput" required
-                            placeholder="••••" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+                    <div class="modal-body text-center py-3">
+                        <p class="text-muted small mb-3">Tato akce je nevratná. Zadejte rodinný PIN kód pro potvrzení:
+                        </p>
+                        <input type="password" class="form-control text-center fw-bold form-control-lg"
+                            id="deletePinInput" required placeholder="••••" inputmode="numeric" pattern="[0-9]*"
+                            maxlength="4" autocomplete="off">
                     </div>
-                    <div class="modal-footer border-0 bg-light p-2 d-flex justify-content-between" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
-                        <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Zrušit</button>
-                        <button type="submit" id="deleteSubmitBtn" class="btn btn-sm btn-danger px-3 fw-bold">Potvrdit</button>
+                    <div class="modal-footer border-0 pt-0 d-flex justify-content-between">
+                        <button type="button" class="btn btn-sm btn-outline-secondary px-3"
+                            data-bs-dismiss="modal">Zrušit</button>
+                        <button type="submit" id="deleteSubmitBtn"
+                            class="btn btn-sm btn-danger px-3 fw-bold">Potvrdit</button>
                     </div>
                 </form>
             </div>

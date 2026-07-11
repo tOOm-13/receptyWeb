@@ -9,6 +9,8 @@ const currentCategory = document.getElementById("currentCategory");
 const categoryButtons = document.querySelectorAll(".category-filter, .filter-badge");
 const searchInput = document.getElementById("searchInput");
 const favoritesLink = document.getElementById("favoritesLink");
+const mobileFavNav = document.getElementById("mobileFavNav");
+const mobileHomeNav = document.getElementById("mobileHomeNav");
 const addRecipeForm = document.getElementById("addRecipeForm");
 const deleteRecipeForm = document.getElementById("deleteRecipeForm");
 
@@ -188,7 +190,7 @@ if (deleteRecipeForm) {
 function showLoader(text) {
     container.innerHTML = `
         <div class="col-12 text-center my-5 w-100">
-            <div class="spinner-border text-primary" role="status"></div>
+            <div class="spinner-border text-danger" role="status"></div>
             <p class="mt-2 text-muted">${text}</p>
         </div>`;
 }
@@ -201,28 +203,28 @@ function createCard(recipe) {
 
     return `
         <div class="col">
-            <div class="card h-100 shadow-sm d-flex flex-column position-relative recipe-card">
-                <button class="btn btn-dark btn-sm delete-btn-overlay" onclick="openDeleteModal(${recipe.id})">
-                    <i class="fa-solid fa-trash-can text-danger"></i>
+            <div class="card h-100 d-flex flex-column position-relative recipe-card border-0 shadow-sm overflow-hidden">
+                <button class="btn delete-btn-overlay" onclick="openDeleteModal(${recipe.id})" title="Smazat recept">
+                    <i class="fa-solid fa-trash-can"></i>
                 </button>
                 
-                <button class="btn ${isInQueue ? 'btn-warning' : 'btn-light'} btn-sm print-btn-overlay" onclick="togglePrintQueue(${recipe.id}, event)" id="btnPrint-${recipe.id}">
+                <button class="btn ${isInQueue ? 'btn-warning' : ''} print-btn-overlay" onclick="togglePrintQueue(${recipe.id}, event)" id="btnPrint-${recipe.id}" title="Přidat do tisku">
                     <i class="fa-solid fa-print"></i>
                 </button>
                 
                 <div class="img-wrapper" style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
                     <img src="${recipe.image}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="${recipe.title}" loading="lazy">
                 </div>
-                <div class="card-body p-2 p-md-3 d-flex flex-column justify-content-between">
+                <div class="card-body p-3 d-flex flex-column justify-content-between">
                     <div>
-                        <span class="badge bg-light text-dark border mb-1 small d-none d-sm-inline-block">${fullCategory}</span>
-                        <h6 class="card-title fw-bold text-dark text-truncate mb-2" style="font-size: 14px; max-width: 100%;">${recipe.title}</h6>
+                        <span class="badge bg-light text-muted border mb-2 small d-inline-block fw-semibold text-uppercase" style="font-size: 10px; padding: 4px 8px;">${fullCategory}</span>
+                        <h6 class="card-title fw-bold text-dark mb-3" style="font-size: 15px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 42px;">${recipe.title}</h6>
                     </div>
-                    <div class="d-flex gap-1 mt-auto">
-                        <a href="recipe.html?id=${recipe.id}" class="btn btn-outline-primary btn-sm flex-grow-1 recipe-link d-flex align-items-center justify-content-center py-2 fw-semibold">
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="recipe.html?id=${recipe.id}" class="btn btn-outline-secondary btn-sm flex-grow-1 d-flex align-items-center justify-content-center py-2 fw-semibold" style="border-radius: var(--radius-sm); font-size: 13px;">
                             Recept
                         </a>
-                        <button class="btn ${isFavorite ? "btn-danger" : "btn-outline-danger"} btn-sm favorite-btn px-2" data-id="${recipe.id}">
+                        <button class="btn ${isFavorite ? "btn-danger text-white border-danger" : "btn-outline-danger"} btn-sm favorite-btn px-3 d-flex align-items-center justify-content-center" data-id="${recipe.id}" style="border-radius: var(--radius-sm);">
                             <i class="fa-solid fa-heart"></i>
                         </button>
                     </div>
@@ -244,10 +246,10 @@ function togglePrintQueue(id, event) {
 
     if (index > -1) {
         printQueue.splice(index, 1);
-        if (btn) { btn.classList.remove('btn-warning'); btn.classList.add('btn-light'); }
+        if (btn) { btn.classList.remove('btn-warning'); }
     } else {
         printQueue.push(recipe);
-        if (btn) { btn.classList.remove('btn-light'); btn.classList.add('btn-warning'); }
+        if (btn) { btn.classList.add('btn-warning'); }
     }
 
     localStorage.setItem("printQueue", JSON.stringify(printQueue));
@@ -256,9 +258,8 @@ function togglePrintQueue(id, event) {
 
 function updatePrintNavButton() {
     const printNavBtn = document.getElementById("printNavBtn");
-    const printNavBtnMobile = document.getElementById("printNavBtnMobile");
     const clearPrintBtn = document.getElementById("clearPrintBtn");
-    const clearPrintBtnMobile = document.getElementById("clearPrintBtnMobile");
+    const mobilePrintBadge = document.getElementById("mobilePrintBadge");
     const count = printQueue.length;
 
     if (count > 0) {
@@ -266,18 +267,17 @@ function updatePrintNavButton() {
             printNavBtn.innerHTML = `<i class="fa-solid fa-print me-1"></i> Tisková fronta (${count})`;
             printNavBtn.classList.remove("d-none");
         }
-        if (printNavBtnMobile) {
-            printNavBtnMobile.innerHTML = `<i class="fa-solid fa-print"></i> <span class="badge bg-danger rounded-circle position-absolute top-0 start-100 translate-middle" style="font-size: 9px; padding: 3px 5px;">${count}</span>`;
-            printNavBtnMobile.classList.remove("d-none");
-            printNavBtnMobile.style.position = "relative";
+        if (mobilePrintBadge) {
+            mobilePrintBadge.innerText = count;
+            mobilePrintBadge.style.display = "inline-block";
         }
         if (clearPrintBtn) clearPrintBtn.classList.remove("d-none");
-        if (clearPrintBtnMobile) clearPrintBtnMobile.classList.remove("d-none");
     } else {
         if (printNavBtn) printNavBtn.classList.add("d-none");
-        if (printNavBtnMobile) printNavBtnMobile.classList.add("d-none");
+        if (mobilePrintBadge) {
+            mobilePrintBadge.style.display = "none";
+        }
         if (clearPrintBtn) clearPrintBtn.classList.add("d-none");
-        if (clearPrintBtnMobile) clearPrintBtnMobile.classList.add("d-none");
     }
 }
 
@@ -290,7 +290,6 @@ function clearPrintQueue() {
             const btn = document.getElementById(`btnPrint-${recipe.id}`);
             if (btn) {
                 btn.classList.remove('btn-warning');
-                btn.classList.add('btn-light');
             }
         });
 
@@ -366,10 +365,17 @@ categoryButtons.forEach(button => {
             showOnlyFavorites = true;
             selectedCategory = "all";
             currentCategory.textContent = "Oblíbené recepty";
+            if (mobileFavNav) mobileFavNav.classList.add("active");
+            if (mobileHomeNav) mobileHomeNav.classList.remove("active");
         } else {
             showOnlyFavorites = false;
             selectedCategory = cat;
             currentCategory.textContent = selectedCategory === "all" ? "Všechny recepty" : selectedCategory;
+            if (mobileHomeNav) {
+                if (cat === "all") mobileHomeNav.classList.add("active");
+                else mobileHomeNav.classList.remove("active");
+            }
+            if (mobileFavNav) mobileFavNav.classList.remove("active");
         }
 
         categoryButtons.forEach(btn => {
@@ -395,6 +401,8 @@ if (favoritesLink) {
         showOnlyFavorites = true;
         selectedCategory = "all";
         currentCategory.textContent = "Oblíbené recepty";
+        if (mobileFavNav) mobileFavNav.classList.add("active");
+        if (mobileHomeNav) mobileHomeNav.classList.remove("active");
         
         categoryButtons.forEach(btn => {
             if(btn.id === "mobileFavoritesBtn") btn.classList.add("active-category", "active");
@@ -403,6 +411,24 @@ if (favoritesLink) {
 
         filterRecipes();
         closeMobileNavbar();
+    });
+}
+
+if (mobileFavNav) {
+    mobileFavNav.addEventListener("click", e => {
+        e.preventDefault();
+        showOnlyFavorites = true;
+        selectedCategory = "all";
+        currentCategory.textContent = "Oblíbené recepty";
+        mobileFavNav.classList.add("active");
+        if (mobileHomeNav) mobileHomeNav.classList.remove("active");
+
+        categoryButtons.forEach(btn => {
+            if(btn.id === "mobileFavoritesBtn") btn.classList.add("active-category", "active");
+            else btn.classList.remove("active-category", "active");
+        });
+
+        filterRecipes();
     });
 }
 

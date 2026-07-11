@@ -10,20 +10,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow-sm">
-        <div class="container-fluid px-3">
-            <a class="btn btn-outline-light btn-sm me-2" href="index.html">
-                <i class="fa-solid fa-arrow-left me-1"></i> Zpět
+    <!-- STICKY HEADER -->
+    <nav class="navbar sticky-top">
+        <div class="container px-3">
+            <a class="btn btn-outline-secondary btn-sm d-flex align-items-center" href="index.html">
+                <i class="fa-solid fa-chevron-left me-1"></i> Zpět
             </a>
-            <span class="navbar-brand fw-bold mx-auto text-truncate" id="navTitle">Načítám...</span>
+            <span class="navbar-brand fw-bold mx-auto text-truncate" id="navTitle" style="max-width: 60%;">Načítám...</span>
+            <div style="width: 68px;"></div> <!-- Spacer for centering the title -->
         </div>
     </nav>
 
+    <!-- CONTENT -->
     <div class="container my-4 px-3" id="recipeDetailContainer">
         <div class="text-center my-5">
-            <div class="spinner-border text-primary" role="status"></div>
+            <div class="spinner-border text-danger" role="status"></div>
         </div>
     </div>
 
@@ -43,7 +46,7 @@
                 const recipe = recipes.find(r => Number(r.id) === recipeId);
 
                 if (!recipe) {
-                    container.innerHTML = `<div class="alert alert-danger">Recept nebyl nalezen.</div>`;
+                    container.innerHTML = `<div class="alert alert-danger border-0 rounded-3 shadow-sm text-center p-4"><i class="fa-solid fa-circle-xmark text-danger fa-2xl mb-3 d-block"></i>Recept nebyl nalezen.</div>`;
                     return;
                 }
 
@@ -65,36 +68,44 @@
                 const fullCategory = getFullCategoryName(recipe.category);
 
                 const ingredientsHtml = recipe.ingredients
-                    ? recipe.ingredients.split(';').map(ing => `<li class="list-group-item py-2"><i class="fa-solid fa-check text-success me-2"></i>${ing.trim()}</li>`).join('')
+                    ? recipe.ingredients.split(';').map(ing => `
+                        <li class="list-group-item py-3 px-3 d-flex align-items-center border-0 border-bottom">
+                            <input class="form-check-input me-3 border-secondary" type="checkbox" style="width: 20px; height: 20px; cursor: pointer;">
+                            <span class="fs-6 text-dark">${ing.trim()}</span>
+                        </li>`).join('')
                     : '<li class="list-group-item text-muted">Žádné ingredience nebyly zadány.</li>';
 
                 const instructionsHtml = recipe.instructions
                     ? recipe.instructions.split(';').map((inst, index) => `
-                        <div class="d-flex mb-3 align-items-start">
-                            <span class="badge bg-secondary rounded-circle me-3 mt-1 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; min-width: 28px;">${index + 1}</span>
-                            <p class="mb-0 fs-5">${inst.trim()}</p>
+                        <div class="step-card d-flex align-items-start shadow-sm">
+                            <span class="badge bg-danger rounded-circle me-3 mt-1 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; min-width: 28px; font-size: 14px; font-weight: 700;">${index + 1}</span>
+                            <p class="mb-0 fs-6 text-dark" style="line-height: 1.6;">${inst.trim()}</p>
                         </div>`).join('')
                     : '<p class="text-muted">Žádný postup nebyl zadán.</p>';
 
                 container.innerHTML = `
                     <div class="row g-4">
                         <div class="col-12 col-md-5">
-                            <img src="${recipe.image}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 250px;" alt="${recipe.title}">
-                            <div class="mt-2">
-                                <span class="badge bg-primary text-uppercase">${fullCategory}</span>
+                            <div class="position-relative">
+                                <img src="${recipe.image}" class="img-fluid w-100 recipe-hero-img" alt="${recipe.title}">
+                                <span class="recipe-meta-badge">${fullCategory}</span>
                             </div>
                         </div>
                         
                         <div class="col-12 col-md-7">
-                            <h1 class="display-6 fw-bold text-dark mb-3">${recipe.title}</h1>
+                            <h1 class="display-6 fw-extrabold text-dark mb-4" style="letter-spacing: -1px; font-weight: 800;">${recipe.title}</h1>
                             
-                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3"><i class="fa-solid fa-basket-shopping me-2"></i>Ingredience</h4>
-                            <ul class="list-group list-group-flush mb-4 shadow-sm rounded">
+                            <h4 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center">
+                                <i class="fa-solid fa-basket-shopping text-danger me-2"></i> Ingredience
+                            </h4>
+                            <ul class="list-group list-group-flush mb-4 shadow-sm rounded-3 overflow-hidden border">
                                 ${ingredientsHtml}
                             </ul>
                             
-                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3"><i class="fa-solid fa-kitchen-set me-2"></i>Postup přípravy</h4>
-                            <div class="px-2">
+                            <h4 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center">
+                                <i class="fa-solid fa-kitchen-set text-danger me-2"></i> Postup přípravy
+                            </h4>
+                            <div class="px-1">
                                 ${instructionsHtml}
                             </div>
                         </div>
