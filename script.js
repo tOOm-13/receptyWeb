@@ -23,7 +23,52 @@ let printQueue = JSON.parse(localStorage.getItem("printQueue")) || [];
 let selectedCategory = "all";
 let showOnlyFavorites = false;
 
-// Ochrana proti XSS útokům (zneškodní nebezpečné HTML znaky)
+// --- DYNAMICKÉ OVLÁDÁNÍ VELIKOSTI PÍSMA ---
+function changeFontSize(size) {
+    const htmlEl = document.documentElement;
+    htmlEl.classList.remove('font-size-sm', 'font-size-md', 'font-size-lg');
+    htmlEl.classList.add(`font-size-${size}`);
+    
+    localStorage.setItem('fontSize', size);
+    updateFontBtnStyles(size);
+}
+
+function updateFontBtnStyles(size) {
+    // Tlačítka pro desktop
+    const btnSm = document.getElementById('btnFontSm');
+    const btnMd = document.getElementById('btnFontMd');
+    const btnLg = document.getElementById('btnFontLg');
+    // Tlačítka pro mobil
+    const btnSmM = document.getElementById('btnFontSmMobile');
+    const btnMdM = document.getElementById('btnFontMdMobile');
+    const btnLgM = document.getElementById('btnFontLgMobile');
+    
+    const btns = [btnSm, btnMd, btnLg, btnSmM, btnMdM, btnLgM];
+    btns.forEach(btn => {
+        if (btn) btn.classList.remove('active');
+    });
+    
+    if (size === 'sm') {
+        if (btnSm) btnSm.classList.add('active');
+        if (btnSmM) btnSmM.classList.add('active');
+    } else if (size === 'md') {
+        if (btnMd) btnMd.classList.add('active');
+        if (btnMdM) btnMdM.classList.add('active');
+    } else if (size === 'lg') {
+        if (btnLg) btnLg.classList.add('active');
+        if (btnLgM) btnLgM.classList.add('active');
+    }
+}
+
+function initFontSize() {
+    const savedSize = localStorage.getItem('fontSize') || 'md';
+    changeFontSize(savedSize);
+}
+
+// Inicializace velikosti písma
+initFontSize();
+
+// Ochrana proti XSS útokům
 function escapeHTML(str) {
     if (!str) return '';
     return str.replace(/[&<>"']/g, function (m) {
@@ -48,16 +93,16 @@ function closeMobileNavbar() {
     }
 }
 
-// Převod zkratek na plný název
+// Převod zkratek na plný název s emoji pro děti
 function getFullCategoryName(cat) {
-    if (!cat) return "Neznámé";
+    if (!cat) return "🍳 Neznámé";
     const cleanCat = cat.trim().toUpperCase();
     switch (cleanCat) {
-        case "S": return "Snídaně";
-        case "P": return "Polévky";
-        case "H": return "Hlavní jídla";
-        case "PR": return "Přílohy";
-        case "Z": return "Zákusky";
+        case "S": return "🥞 Snídaně";
+        case "P": return "🍜 Polévky";
+        case "H": return "🍗 Hlavní jídla";
+        case "PR": return "🥔 Přílohy";
+        case "Z": return "🍰 Zákusky";
         default: return cat;
     }
 }
@@ -71,9 +116,10 @@ async function fetchRecipes() {
     } catch (error) {
         console.error("Chyba při načítání:", error);
         container.innerHTML = `
-            <div class="col-12 text-center text-danger my-4 py-4">
-                <i class="fa-solid fa-triangle-exclamation fa-2xl mb-3"></i>
-                <h5>Chyba při stahování receptů.</h5>
+            <div class="col-12 text-center text-danger my-5 py-5 w-100">
+                <i class="fa-solid fa-triangle-exclamation fa-3x mb-3 text-warning"></i>
+                <h5 class="fw-bold">Něco se nepovedlo při stahování receptů 😢</h5>
+                <p class="text-secondary small">Zkontrolujte připojení k internetu nebo zkuste stránku načíst znovu.</p>
             </div>`;
     }
 }
@@ -84,18 +130,18 @@ if (addRecipeForm) {
         e.preventDefault();
 
         const submitBtn = document.getElementById("submitBtn");
-        const btnText = document.getElementById("btnText");
         const pinInput = document.getElementById("recipePin");
 
         submitBtn.disabled = true;
-        btnText.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Ukládám...`;
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Ukládám do kuchařky...`;
 
         const formCategory = document.getElementById("recipeCategory").value;
         let shortCategory = "H";
-        if (formCategory === "Snídaně") shortCategory = "S";
-        if (formCategory === "Polévky") shortCategory = "P";
-        if (formCategory === "Přílohy") shortCategory = "PR";
-        if (formCategory === "Zákusky") shortCategory = "Z";
+        // Rozpoznání i s emoji
+        if (formCategory.includes("Snídaně")) shortCategory = "S";
+        if (formCategory.includes("Polévky")) shortCategory = "P";
+        if (formCategory.includes("Přílohy")) shortCategory = "PR";
+        if (formCategory.includes("Zákusky")) shortCategory = "Z";
 
         const newRecipe = {
             action: "ADD",
@@ -119,7 +165,7 @@ if (addRecipeForm) {
             const modalInstance = bootstrap.Modal.getOrCreateInstance(addModalEl);
             modalInstance.hide();
 
-            showLoader("Aktualizuji kuchařku...");
+            showLoader("Ukládám novou dobrotu...");
             setTimeout(fetchRecipes, 1500);
 
         } catch (error) {
@@ -127,12 +173,12 @@ if (addRecipeForm) {
             console.error(error);
         } finally {
             submitBtn.disabled = false;
-            btnText.innerText = "Uložit do kuchařky";
+            submitBtn.innerHTML = `Uložit do kuchařky`;
         }
     });
 }
 
-// FUNKCE: Spuštění procesu mazání (otevře elegantní modal místo promptu)
+// FUNKCE: Spuštění procesu mazání
 function openDeleteModal(id) {
     recipeIdToDelete = id;
     const pinInput = document.getElementById("deletePinInput");
@@ -158,7 +204,7 @@ if (deleteRecipeForm) {
         const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalEl);
         deleteModal.hide();
 
-        showLoader("Mažu recept...");
+        showLoader("Mažu recept z kuchařky...");
 
         try {
             await fetch(API_URL, {
@@ -184,16 +230,62 @@ if (deleteRecipeForm) {
     });
 }
 
-// Společný loader pro UI změny
-function showLoader(text) {
-    container.innerHTML = `
-        <div class="col-12 text-center my-5 w-100">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p class="mt-2 text-muted">${text}</p>
-        </div>`;
+// Společný loader pro UI změny (skeleton loaders)
+function showLoader(text = "") {
+    let html = "";
+    if (text) {
+        html += `
+            <div class="col-12 text-center my-3 w-100 text-secondary">
+                <span class="spinner-border spinner-border-sm me-2 text-warning" role="status"></span>
+                <span class="fw-bold">${text}</span>
+            </div>`;
+    }
+    html += `
+        <div class="col">
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line" style="width: 45%; height: 14px;"></div>
+                    <div class="skeleton-line" style="width: 80%; height: 20px;"></div>
+                    <div class="skeleton-line" style="width: 100%; height: 35px; margin-top: auto;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line" style="width: 35%; height: 14px;"></div>
+                    <div class="skeleton-line" style="width: 70%; height: 20px;"></div>
+                    <div class="skeleton-line" style="width: 100%; height: 35px; margin-top: auto;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line" style="width: 50%; height: 14px;"></div>
+                    <div class="skeleton-line" style="width: 85%; height: 20px;"></div>
+                    <div class="skeleton-line" style="width: 100%; height: 35px; margin-top: auto;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line" style="width: 40%; height: 14px;"></div>
+                    <div class="skeleton-line" style="width: 75%; height: 20px;"></div>
+                    <div class="skeleton-line" style="width: 100%; height: 35px; margin-top: auto;"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.innerHTML = html;
 }
 
-// FUNKCE: Vytvoření karty receptu
+// FUNKCE: Vytvoření karty receptu (rodinný a přístupný vzhled)
 function createCard(recipe) {
     const isFavorite = favorites.includes(Number(recipe.id));
     const isInQueue = printQueue.some(r => Number(r.id) === Number(recipe.id));
@@ -201,28 +293,29 @@ function createCard(recipe) {
 
     return `
         <div class="col">
-            <div class="card h-100 shadow-sm d-flex flex-column position-relative recipe-card">
-                <button class="btn btn-dark btn-sm delete-btn-overlay" onclick="openDeleteModal(${recipe.id})">
-                    <i class="fa-solid fa-trash-can text-danger"></i>
+            <div class="recipe-card position-relative">
+                <button class="delete-btn-overlay" onclick="openDeleteModal(${recipe.id})" title="Smazat recept">
+                    <i class="fa-solid fa-trash-can text-danger me-1"></i> Smazat
                 </button>
                 
-                <button class="btn ${isInQueue ? 'btn-warning' : 'btn-light'} btn-sm print-btn-overlay" onclick="togglePrintQueue(${recipe.id}, event)" id="btnPrint-${recipe.id}">
-                    <i class="fa-solid fa-print"></i>
+                <button class="print-btn-overlay ${isInQueue ? 'btn-warning' : ''}" onclick="togglePrintQueue(${recipe.id}, event)" id="btnPrint-${recipe.id}" title="${isInQueue ? 'Odebrat z tisku' : 'Přidat k tisku'}">
+                    <i class="fa-solid fa-print me-1"></i> ${isInQueue ? 'Ve frontě' : 'K tisku'}
                 </button>
                 
-                <div class="img-wrapper" style="aspect-ratio: 4/3; overflow: hidden; position: relative;">
-                    <img src="${recipe.image}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="${recipe.title}" loading="lazy">
+                <div class="img-wrapper">
+                    <img src="${recipe.image}" alt="${recipe.title}" loading="lazy">
                 </div>
-                <div class="card-body p-2 p-md-3 d-flex flex-column justify-content-between">
+                
+                <div class="card-body-custom">
                     <div>
-                        <span class="badge bg-light text-dark border mb-1 small d-none d-sm-inline-block">${fullCategory}</span>
-                        <h6 class="card-title fw-bold text-dark text-truncate mb-2" style="font-size: 14px; max-width: 100%;">${recipe.title}</h6>
+                        <span class="recipe-badge">${fullCategory}</span>
+                        <h6 class="recipe-title" title="${recipe.title}">${recipe.title}</h6>
                     </div>
-                    <div class="d-flex gap-1 mt-auto">
-                        <a href="recipe.html?id=${recipe.id}" class="btn btn-outline-primary btn-sm flex-grow-1 recipe-link d-flex align-items-center justify-content-center py-2 fw-semibold">
-                            Recept
+                    <div class="d-flex gap-2 mt-auto">
+                        <a href="recipe.html?id=${recipe.id}" class="recipe-link-btn flex-grow-1">
+                            📖 Vařit recept
                         </a>
-                        <button class="btn ${isFavorite ? "btn-danger" : "btn-outline-danger"} btn-sm favorite-btn px-2" data-id="${recipe.id}">
+                        <button class="favorite-btn-card ${isFavorite ? "btn-danger" : ""}" data-id="${recipe.id}" title="${isFavorite ? 'Odebrat z oblíbených' : 'Přidat do oblíbených'}">
                             <i class="fa-solid fa-heart"></i>
                         </button>
                     </div>
@@ -244,10 +337,16 @@ function togglePrintQueue(id, event) {
 
     if (index > -1) {
         printQueue.splice(index, 1);
-        if (btn) { btn.classList.remove('btn-warning'); btn.classList.add('btn-light'); }
+        if (btn) { 
+            btn.classList.remove('btn-warning'); 
+            btn.innerHTML = `<i class="fa-solid fa-print me-1"></i> K tisku`;
+        }
     } else {
         printQueue.push(recipe);
-        if (btn) { btn.classList.remove('btn-light'); btn.classList.add('btn-warning'); }
+        if (btn) { 
+            btn.classList.add('btn-warning'); 
+            btn.innerHTML = `<i class="fa-solid fa-print me-1"></i> Ve frontě`;
+        }
     }
 
     localStorage.setItem("printQueue", JSON.stringify(printQueue));
@@ -263,7 +362,7 @@ function updatePrintNavButton() {
 
     if (count > 0) {
         if (printNavBtn) {
-            printNavBtn.innerHTML = `<i class="fa-solid fa-print me-1"></i> Tisková fronta (${count})`;
+            printNavBtn.innerHTML = `<i class="fa-solid fa-print me-1 text-warning"></i> Tisková fronta (${count})`;
             printNavBtn.classList.remove("d-none");
         }
         if (printNavBtnMobile) {
@@ -290,7 +389,7 @@ function clearPrintQueue() {
             const btn = document.getElementById(`btnPrint-${recipe.id}`);
             if (btn) {
                 btn.classList.remove('btn-warning');
-                btn.classList.add('btn-light');
+                btn.innerHTML = `<i class="fa-solid fa-print me-1"></i> K tisku`;
             }
         });
 
@@ -307,7 +406,16 @@ function filterRecipes() {
     const filtered = recipes.filter(recipe => {
         const matchesSearch = normalizeText(recipe.title).includes(searchValue);
         const fullCategory = getFullCategoryName(recipe.category);
-        const matchesCategory = selectedCategory === "all" || recipe.category === selectedCategory || fullCategory === selectedCategory;
+        
+        // Zohlednění emoji ve filtrech
+        const cleanSelected = selectedCategory.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim().toUpperCase();
+        const cleanRecipeCat = fullCategory.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim().toUpperCase();
+        
+        const matchesCategory = selectedCategory === "all" || 
+                                recipe.category === selectedCategory || 
+                                cleanRecipeCat.includes(cleanSelected) ||
+                                fullCategory.includes(selectedCategory);
+                                
         const matchesFavorites = !showOnlyFavorites || favorites.includes(Number(recipe.id));
 
         return matchesSearch && matchesCategory && matchesFavorites;
@@ -321,9 +429,10 @@ function renderRecipes(recipesToRender) {
 
     if (recipesToRender.length === 0) {
         container.innerHTML = `
-            <div class="col-12 text-center text-muted my-4 py-4 w-100">
-                <i class="fa-solid fa-utensils fa-2xl mb-3"></i>
-                <h5>Nebylo nic nalezeno</h5>
+            <div class="col-12 text-center text-muted my-5 py-5 w-100">
+                <i class="fa-solid fa-utensils fa-3x mb-3 text-secondary"></i>
+                <h5 class="fw-bold">Nebylo nic nalezeno 🍳</h5>
+                <p class="text-secondary small">Zkuste vyhledat jiné slovo nebo změnit filtr.</p>
             </div>`;
         return;
     }
@@ -334,19 +443,25 @@ function renderRecipes(recipesToRender) {
     });
     container.innerHTML = htmlContent;
 
-    document.querySelectorAll(".recipe-card .favorite-btn").forEach(button => {
+    // Připojení event listenerů k tlačítkům oblíbené
+    document.querySelectorAll(".recipe-card .favorite-btn-card").forEach(button => {
         button.addEventListener("click", (e) => {
             e.stopPropagation();
             const recipeId = Number(button.dataset.id);
 
             if (favorites.includes(recipeId)) {
                 favorites = favorites.filter(id => id !== recipeId);
+                button.classList.remove("btn-danger");
             } else {
                 favorites.push(recipeId);
+                button.classList.add("btn-danger");
             }
 
             saveFavorites();
-            filterRecipes();
+            
+            if (showOnlyFavorites) {
+                filterRecipes();
+            }
         });
     });
     updatePrintNavButton();
@@ -365,11 +480,14 @@ categoryButtons.forEach(button => {
         if (cat === "favorites") {
             showOnlyFavorites = true;
             selectedCategory = "all";
-            currentCategory.textContent = "Oblíbené recepty";
+            currentCategory.textContent = "Oblíbené recepty ❤️";
         } else {
             showOnlyFavorites = false;
             selectedCategory = cat;
-            currentCategory.textContent = selectedCategory === "all" ? "Všechny recepty" : selectedCategory;
+            
+            // Název filtru
+            let displayCat = button.textContent.trim();
+            currentCategory.textContent = cat === "all" ? "Všechny recepty 🍳" : displayCat;
         }
 
         categoryButtons.forEach(btn => {
@@ -394,7 +512,7 @@ if (favoritesLink) {
         e.preventDefault();
         showOnlyFavorites = true;
         selectedCategory = "all";
-        currentCategory.textContent = "Oblíbené recepty";
+        currentCategory.textContent = "Oblíbené recepty ❤️";
         
         categoryButtons.forEach(btn => {
             if(btn.id === "mobileFavoritesBtn") btn.classList.add("active-category", "active");
@@ -408,3 +526,22 @@ if (favoritesLink) {
 
 // Spuštění
 fetchRecipes();
+
+// Ochrana PIN políček proti zahlcení a zadání více než 4 čísel
+const pinInputs = [document.getElementById("recipePin"), document.getElementById("deletePinInput")];
+
+pinInputs.forEach(input => {
+    if (input) {
+        input.addEventListener("input", (e) => {
+            // Nahradí cokoliv, co není číslo, prázdným znakem
+            let value = e.target.value.replace(/\D/g, "");
+            
+            // Pokud je řetězec delší než 4 znaky, nekompromisně ho ořízne
+            if (value.length > 4) {
+                value = value.slice(0, 4);
+            }
+            
+            e.target.value = value;
+        });
+    }
+});
