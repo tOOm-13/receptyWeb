@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail receptu</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/webfonts/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top shadow-sm">
+        <div class="container-fluid px-3">
+            <a class="btn btn-outline-light btn-sm me-2" href="index.html">
+                <i class="fa-solid fa-arrow-left me-1"></i> Zpět
+            </a>
+            <span class="navbar-brand fw-bold mx-auto text-truncate" id="navTitle">Načítám...</span>
+        </div>
+    </nav>
+
+    <div class="container my-4 px-3" id="recipeDetailContainer">
+        <div class="text-center my-5">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    </div>
+
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzk3fELy7sIuMoFTeZKSZ9aFkRZf-dAgMYopGnpx-psw7T05cYdy6FQGtPFFY1Y3b1r/exec";
+
+        async function loadRecipeDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const recipeId = Number(urlParams.get('id'));
+            const container = document.getElementById('recipeDetailContainer');
+
+            try {
+                const response = await fetch(API_URL);
+                const recipes = await response.json();
+
+                const recipe = recipes.find(r => Number(r.id) === recipeId);
+
+                if (!recipe) {
+                    container.innerHTML = `<div class="alert alert-danger">Recept nebyl nalezen.</div>`;
+                    return;
+                }
+
+                document.getElementById('navTitle').innerText = recipe.title;
+
+                function getFullCategoryName(cat) {
+                    if (!cat) return "Neznámé";
+                    const cleanCat = cat.trim().toUpperCase();
+                    switch (cleanCat) {
+                        case "S": return "Snídaně";
+                        case "P": return "Polévky";
+                        case "H": return "Hlavní jídla";
+                        case "PR": return "Přílohy";
+                        case "Z": return "Zákusky";
+                        default: return cat;
+                    }
+                }
+
+                const fullCategory = getFullCategoryName(recipe.category);
+
+                const ingredientsHtml = recipe.ingredients
+                    ? recipe.ingredients.split(';').map(ing => `<li class="list-group-item py-2"><i class="fa-solid fa-check text-success me-2"></i>${ing.trim()}</li>`).join('')
+                    : '<li class="list-group-item text-muted">Žádné ingredience nebyly zadány.</li>';
+
+                const instructionsHtml = recipe.instructions
+                    ? recipe.instructions.split(';').map((inst, index) => `
+                        <div class="d-flex mb-3 align-items-start">
+                            <span class="badge bg-secondary rounded-circle me-3 mt-1 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; min-width: 28px;">${index + 1}</span>
+                            <p class="mb-0 fs-5">${inst.trim()}</p>
+                        </div>`).join('')
+                    : '<p class="text-muted">Žádný postup nebyl zadán.</p>';
+
+                container.innerHTML = `
+                    <div class="row g-4">
+                        <div class="col-12 col-md-5">
+                            <img src="${recipe.image}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 250px;" alt="${recipe.title}">
+                            <div class="mt-2">
+                                <span class="badge bg-primary text-uppercase">${fullCategory}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-md-7">
+                            <h1 class="display-6 fw-bold text-dark mb-3">${recipe.title}</h1>
+                            
+                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3"><i class="fa-solid fa-basket-shopping me-2"></i>Ingredience</h4>
+                            <ul class="list-group list-group-flush mb-4 shadow-sm rounded">
+                                ${ingredientsHtml}
+                            </ul>
+                            
+                            <h4 class="fw-bold text-secondary border-bottom pb-2 mb-3"><i class="fa-solid fa-kitchen-set me-2"></i>Postup přípravy</h4>
+                            <div class="px-2">
+                                ${instructionsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div class="alert alert-danger">Chyba při načítání detailu receptu.</div>`;
+            }
+        }
+
+        loadRecipeDetail();
+    </script>
+</body>
+
+</html>

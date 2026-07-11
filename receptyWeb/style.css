@@ -1,0 +1,183 @@
+/* --- GLOBÁLNÍ STYLY --- */
+body {
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* --- KARTY RECEPTŮ (OBECNÉ/DESKTOP) --- */
+.card-img-top {
+    height: 140px;
+    object-fit: cover;
+}
+
+@media (min-width: 768px) {
+    .card-img-top {
+        height: 180px;
+    }
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.card:active,
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.favorite-btn {
+    padding: 8px 12px;
+    font-size: 1.1rem;
+}
+
+.recipe-link {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+}
+
+/* --- PŘEKYVNÁ TLAČÍTKA NA FOTCE (DESKTOP) --- */
+.delete-btn-overlay {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.print-btn-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.delete-btn-overlay:hover,
+.print-btn-overlay:hover {
+    opacity: 1;
+}
+
+/* --- MODÁLNÍ OKNO --- */
+.modal-body input,
+.modal-body select {
+    font-size: 16px !important;
+}
+
+/* --- MODERNÍ FILTRY (PC / TABLET) --- */
+.filter-scroll-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Na PC se filtry řadí hezky vedle sebe a zalamují se */
+    padding: 15px 0;
+}
+
+.filter-badge {
+    background: #f8f9fa;
+    color: #4b5563;
+    border: 1px solid #dee2e6;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Aktivní stav pro vybraný filtr */
+.filter-badge.active-category, 
+.filter-badge.active {
+    background: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+}
+
+/* --- MOBILNÍ ÚPRAVA (Do šířky 576px) --- */
+@media (max-width: 576px) {
+
+    /* Posuvná lišta filtrů na mobilu (Airbnb styl) */
+    .filter-scroll-container {
+        flex-wrap: nowrap; /* Zakáže zalamování pod sebe */
+        overflow-x: auto;  /* Aktivuje posun prstem do stran */
+        padding: 10px 4px;
+        margin-right: -15px; /* Roztažení lišty na okraje displeje */
+        margin-left: -15px;
+        padding-left: 15px;
+        padding-right: 15px;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Skrytí scrollbaru na mobilech */
+    .filter-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Mřížka receptů pro mobil */
+    .recipe-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 8px;
+    }
+
+    /* Úprava mobilní karty receptu */
+    .recipe-card {
+        border-radius: 12px !important;
+        overflow: hidden;
+        border: 1px solid #e9ecef !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Kulatá skleněná tlačítka na fotce v rozích pro mobily */
+    .delete-btn-overlay {
+        left: 8px !important;
+        top: 8px !important;
+    }
+    
+    .print-btn-overlay {
+        right: 8px !important;
+        top: 8px !important;
+    }
+
+    .delete-btn-overlay, 
+    .print-btn-overlay {
+        position: absolute;
+        z-index: 5;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50% !important;
+        border: none !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        padding: 0 !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(4px);
+        color: #333 !important;
+    }
+
+    .delete-btn-overlay:hover {
+        color: #dc3545 !important;
+    }
+
+    .print-btn-overlay:hover {
+        color: #0d6efd !important;
+    }
+
+    /* Hlavní akční tlačítko pro palec */
+    .recipe-card .btn-primary-action {
+        padding: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+    }
+}
