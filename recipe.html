@@ -11,6 +11,11 @@
 </head>
 
 <body>
+    <script>
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+    </script>
 
     <!-- STICKY HEADER -->
     <nav class="navbar sticky-top">
@@ -19,7 +24,9 @@
                 <i class="fa-solid fa-chevron-left me-1"></i> Zpět
             </a>
             <span class="navbar-brand fw-bold mx-auto text-truncate" id="navTitle" style="max-width: 60%;">Načítám...</span>
-            <div style="width: 68px;"></div> <!-- Spacer for centering the title -->
+            <button id="themeToggleBtn" class="btn btn-link theme-toggle-btn p-1" onclick="toggleTheme()" title="Přepnout tmavý režim" style="font-size: 20px; text-decoration: none; border: none; box-shadow: none;">
+                <i class="fa-solid fa-moon text-dark"></i>
+            </button>
         </div>
     </nav>
 
@@ -93,16 +100,16 @@
                         </div>
                         
                         <div class="col-12 col-md-7">
-                            <h1 class="display-6 fw-extrabold text-dark mb-4" style="letter-spacing: -1px; font-weight: 800;">${recipe.title}</h1>
+                            <h1 class="display-6 fw-extrabold text-dark mb-4 text-center text-md-start" style="letter-spacing: -1px; font-weight: 800;">${recipe.title}</h1>
                             
-                            <h4 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center">
+                            <h4 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
                                 <i class="fa-solid fa-basket-shopping text-danger me-2"></i> Ingredience
                             </h4>
                             <ul class="list-group list-group-flush mb-4 shadow-sm rounded-3 overflow-hidden border">
                                 ${ingredientsHtml}
                             </ul>
                             
-                            <h4 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center">
+                            <h4 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center justify-content-center justify-content-md-start">
                                 <i class="fa-solid fa-kitchen-set text-danger me-2"></i> Postup přípravy
                             </h4>
                             <div class="px-1">
@@ -119,6 +126,26 @@
         }
 
         loadRecipeDetail();
+
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle("dark-theme");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+            updateThemeIcon(isDark);
+        }
+        function updateThemeIcon(isDark) {
+            const icon = document.querySelector("#themeToggleBtn i");
+            if (icon) {
+                if (isDark) {
+                    icon.className = "fa-solid fa-sun text-warning";
+                } else {
+                    icon.className = "fa-solid fa-moon text-dark";
+                }
+            }
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const isDark = document.body.classList.contains("dark-theme");
+            updateThemeIcon(isDark);
+        });
     </script>
 </body>
 

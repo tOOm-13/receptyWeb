@@ -170,6 +170,7 @@ html {
     gap: 12px;
     flex-wrap: wrap;
     padding: 20px 0;
+    justify-content: center;
 }
 
 .filter-badge {
@@ -292,6 +293,7 @@ html {
         padding-right: 15px;
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
+        justify-content: flex-start;
     }
     
     .filter-scroll-container::-webkit-scrollbar {
@@ -382,4 +384,219 @@ html {
 .step-card:hover {
     border-color: var(--primary-light);
     background: var(--bg-color);
+}
+
+/* --- GLOBAL TRANSITIONS FOR SMOOTH THEME SWITCHING --- */
+body {
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+.navbar, .mobile-bottom-nav, .recipe-card, .filter-badge, .form-control, .form-select, .modal-content, .step-card, .list-group-item {
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- PREMIUM DARK MODE STYLES (SLATE THEME) --- */
+body.dark-theme {
+    --bg-color: #0B0F19;       /* Deep Midnight Slate */
+    --card-bg: #151D30;        /* Rich Dark Slate Card */
+    --text-main: #F1F5F9;      /* Crisp Off-White */
+    --text-muted: #94A3B8;     /* Muted Slate Gray */
+    --border-color: #1E293B;   /* Slate Border */
+    --primary-light: rgba(255, 90, 95, 0.15);
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .navbar {
+    background: rgba(11, 15, 25, 0.75) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .navbar-brand {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .mobile-bottom-nav {
+    background: rgba(21, 29, 48, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .mobile-bottom-nav-item {
+    color: #94A3B8;
+}
+
+body.dark-theme .mobile-fab-item {
+    border-color: var(--bg-color);
+    box-shadow: 0 4px 15px rgba(255, 90, 95, 0.4);
+}
+
+body.dark-theme .filter-badge {
+    background: #151D30;
+    color: #94A3B8;
+    border-color: #1E293B;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-theme .filter-badge:hover {
+    border-color: #475569;
+    color: #FFFFFF;
+}
+
+body.dark-theme .filter-badge.active-category,
+body.dark-theme .filter-badge.active {
+    background: var(--primary) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(255, 90, 95, 0.4) !important;
+}
+
+body.dark-theme .recipe-card {
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-theme .recipe-card:hover {
+    border-color: rgba(255, 90, 95, 0.25) !important;
+}
+
+body.dark-theme .recipe-card .bg-light {
+    background-color: #1E293B !important;
+}
+
+/* Frosted glass overlay buttons on images */
+body.dark-theme .delete-btn-overlay,
+body.dark-theme .print-btn-overlay {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #CBD5E1 !important;
+}
+
+body.dark-theme .delete-btn-overlay:hover {
+    background: #DC3545 !important;
+    color: #FFFFFF !important;
+    border-color: #DC3545 !important;
+}
+
+body.dark-theme .print-btn-overlay:hover {
+    background: var(--secondary) !important;
+    color: #FFFFFF !important;
+    border-color: var(--secondary) !important;
+}
+
+body.dark-theme .print-btn-overlay.btn-warning {
+    background: var(--accent) !important;
+    color: #FFFFFF !important;
+    border-color: var(--accent) !important;
+}
+
+body.dark-theme .modal-content {
+    background: #151D30;
+    color: #F1F5F9;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .modal-header,
+body.dark-theme .modal-footer {
+    border-color: #1E293B;
+    background: #151D30 !important;
+}
+
+body.dark-theme .modal-header .btn-close {
+    filter: invert(1) grayscale(1) brightness(2);
+}
+
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+    background-color: #0B0F19;
+    border-color: #1E293B;
+    color: #F1F5F9;
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.25);
+}
+
+body.dark-theme .form-control::placeholder {
+    color: #475569;
+}
+
+body.dark-theme .bg-light {
+    background-color: #0B0F19 !important;
+}
+
+body.dark-theme .bg-white {
+    background-color: #151D30 !important;
+}
+
+body.dark-theme .text-muted {
+    color: #94A3B8 !important;
+}
+
+body.dark-theme .border {
+    border-color: #1E293B !important;
+}
+
+body.dark-theme .step-card {
+    background: #151D30;
+    border-color: #1E293B;
+}
+
+body.dark-theme .step-card:hover {
+    background: #101626;
+    border-color: rgba(255, 90, 95, 0.2);
+}
+
+body.dark-theme .list-group-item {
+    background-color: #151D30;
+    border-color: #1E293B !important;
+    color: #F1F5F9 !important;
+}
+
+body.dark-theme .list-group-item span {
+    color: #F1F5F9 !important;
+}
+
+body.dark-theme .recipe-hero-img {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .recipe-meta-badge {
+    background: rgba(21, 29, 48, 0.9);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .text-dark {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .text-secondary {
+    color: #94A3B8 !important;
+}
+
+body.dark-theme .theme-toggle-btn {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .theme-toggle-btn i {
+    color: #FFFFFF !important;
+}
+
+body.dark-theme .search-container input {
+    background-color: #151D30;
+    color: #F1F5F9;
+    border-color: #1E293B;
+}
+
+body.dark-theme .search-container input::placeholder {
+    color: #94A3B8;
+}
+
+body.dark-theme .search-icon {
+    color: #94A3B8;
 }

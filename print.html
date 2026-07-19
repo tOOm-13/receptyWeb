@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tisk receptů</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/webfonts/all.min.css">
@@ -17,7 +18,7 @@
             print-color-adjust: exact;
         }
 
-        /* Stránka A4 na šířku */
+        /* Stránka A4 na šířku (PC / Tablet) */
         .print-page {
             width: 297mm;
             height: 210mm;
@@ -30,23 +31,6 @@
             position: relative;
             margin: 20px auto;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-        }
-
-        @media print {
-            body {
-                background: white;
-                margin: 0;
-                padding: 0;
-            }
-
-            .print-page {
-                margin: 0;
-                box-shadow: none;
-            }
-
-            .no-print {
-                display: none !important;
-            }
         }
 
         /* Jednotlivá A5 kartička - moderní rustikální & elegantní design */
@@ -214,6 +198,72 @@
             color: #64748b;
             font-weight: 700;
             margin-bottom: 1mm;
+        }
+
+        /* --- MOBILNÍ ZOBRAZENÍ PREVIEW --- */
+        @media (max-width: 991px) {
+            body {
+                background: #f8fafc;
+            }
+            .print-page {
+                width: 95%;
+                height: auto;
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                margin: 15px auto;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+            }
+            .recipe-card-print, .empty-card-print {
+                width: 100%;
+                height: auto;
+                min-height: 190mm;
+                padding: 6mm 6mm 5mm 15mm;
+            }
+            .empty-card-print {
+                padding: 20px !important;
+                height: 100px !important;
+                min-height: auto !important;
+            }
+        }
+
+        /* --- SKUTEČNÝ TISK (A4 LANDSCAPE) --- */
+        @media print {
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .print-page {
+                width: 297mm !important;
+                height: 210mm !important;
+                flex-direction: row !important;
+                padding: 10mm 12mm !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                border: none !important;
+                border-radius: 0 !important;
+            }
+
+            .recipe-card-print {
+                width: 133mm !important;
+                height: 190mm !important;
+                padding: 6mm 6mm 5mm 15mm !important;
+            }
+
+            .empty-card-print {
+                width: 133mm !important;
+                height: 190mm !important;
+                display: flex !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
