@@ -99,13 +99,29 @@ if (addRecipeForm) {
         if (formCategory === "Přílohy") shortCategory = "PR";
         if (formCategory === "Zákusky") shortCategory = "Z";
 
+        const rawIngredients = document.getElementById("recipeIngredients").value;
+        const processedIngredients = rawIngredients.split('\n')
+            .map(item => item.trim())
+            .filter(item => item.length > 0)
+            .join('; ');
+
+        const rawInstructions = document.getElementById("recipeInstructions").value;
+        const processedInstructions = rawInstructions.split('\n')
+            .map(item => item.trim())
+            .filter(item => item.length > 0)
+            .join('; ');
+
+        const imageUrlInput = document.getElementById("recipeImage").value.trim();
+        const defaultImage = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?q=80&w=600";
+        const finalImageUrl = imageUrlInput ? encodeURI(imageUrlInput) : defaultImage;
+
         const newRecipe = {
             action: "ADD",
             title: escapeHTML(document.getElementById("recipeTitle").value),
             category: shortCategory,
-            image: encodeURI(document.getElementById("recipeImage").value),
-            ingredients: escapeHTML(document.getElementById("recipeIngredients").value),
-            instructions: escapeHTML(document.getElementById("recipeInstructions").value),
+            image: finalImageUrl,
+            ingredients: escapeHTML(processedIngredients),
+            instructions: escapeHTML(processedInstructions),
             pin: pinInput.value
         };
 

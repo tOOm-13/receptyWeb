@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/webfonts/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
         body {
             background: #f3f4f6;
@@ -18,13 +18,50 @@
             print-color-adjust: exact;
         }
 
+        /* Tisková lišta sladěná s GUI */
+        .no-print {
+            background: #0B0F19 !important; /* Shodná s tmavým režimem kuchařky */
+            color: #F1F5F9 !important;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        .no-print h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+        }
+
+        .no-print .btn-warning {
+            background-color: #FF5A5F !important; /* Hlavní korálová barva kuchařky */
+            border-color: #FF5A5F !important;
+            color: white !important;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+        }
+
+        .no-print .btn-warning:hover {
+            background-color: #E0484D !important;
+            border-color: #E0484D !important;
+        }
+
+        .no-print .btn-outline-light {
+            border-color: #475569 !important;
+            color: #94A3B8 !important;
+            font-weight: 600;
+        }
+
+        .no-print .btn-outline-light:hover {
+            background: #1E293B !important;
+            color: #F1F5F9 !important;
+        }
+
         /* Stránka A4 na šířku (PC / Tablet) */
         .print-page {
             width: 297mm;
             height: 210mm;
             page-break-after: always;
             box-sizing: border-box;
-            padding: 10mm 12mm;
+            padding: 5mm 6mm; /* Přesně 5mm horní/dolní okraj */
             display: flex;
             justify-content: space-between;
             background: white;
@@ -33,14 +70,15 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
         }
 
-        /* Jednotlivá A5 kartička - moderní rustikální & elegantní design */
+        /* Jednotlivá A5 kartička - zvětšená pro vyplnění plochy papíru */
         .recipe-card-print {
-            width: 133mm;
-            height: 190mm;
-            border: 1px solid #1a1a1a;
-            outline: 3px double #1a1a1a;
+            margin-top: 2.5px;
+            width: 140mm; /* Zvětšeno ze 133mm */
+            height: 200mm; /* Zvětšeno ze 190mm */
+            border: 1.5px solid #000000; /* Výraznější černý rámeček */
+            outline: 3px double #000000;
             outline-offset: -4px;
-            padding: 6mm 6mm 5mm 15mm; /* Větší levý okraj pro děrovací kroužky */
+            padding: 5mm 5mm 4mm 11mm; /* Zmenšené okraje (více místa pro obsah) */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -49,66 +87,69 @@
             background: white;
         }
 
-        /* Prázdná polovina papíru */
+        /* Prázdná polovina papíru (zcela neviditelná) */
         .empty-card-print {
-            width: 133mm;
-            height: 190mm;
-            border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            font-style: italic;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 14px;
-            background: #f8fafc;
+            width: 140mm;
+            height: 200mm;
+            border: none !important;
+            background: transparent !important;
         }
 
-        /* Vodící kroužky pro děrovačku (do šanonu) */
+        /* Vodící kroužky pro děrovačku (do šanonu) - absolutně pozicované */
         .binder-holes {
             position: absolute;
-            left: 4.5mm;
+            left: 3.5mm;
             top: 0;
             bottom: 0;
             width: 5mm;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 27.5mm 0; /* Align perfectly with specified coordinates */
-            box-sizing: border-box;
         }
 
         .binder-hole {
             width: 4.5mm;
             height: 4.5mm;
-            border: 1px solid #94a3b8;
-            background: #f1f5f9;
+            border: 1.5px solid #000000; /* Výraznější černá pro snadné děrování */
+            background: #ffffff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            position: absolute;
+            left: 0;
         }
         
         .binder-hole::after {
             content: '';
             width: 1.5mm;
             height: 1.5mm;
-            background: #cbd5e1;
+            background: #000000;
             border-radius: 50%;
+        }
+
+        .binder-hole:nth-child(1) {
+            top: 20.5mm; /* 27.5mm od vrchu A4 (mínus 5mm horní okraj stránky) */
+        }
+
+        .binder-hole:nth-child(2) {
+            top: 65.5mm; /* 22.5mm + 45mm mezera */
+        }
+
+        .binder-hole:nth-child(3) {
+            top: 130.5mm; /* 67.5mm + 65mm mezera */
+        }
+
+        .binder-hole:nth-child(4) {
+            top: 175.5mm; /* 132.5mm + 45mm mezera */
         }
 
         /* Záhlaví RECIPE CARD */
         .print-header {
             text-align: center;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 3px;
             text-transform: uppercase;
             margin-bottom: 2mm;
-            color: #d97706; /* Elegant amber accent */
+            color: #92400e; /* Tmavší, kontrastnější jantarová */
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
@@ -117,12 +158,12 @@
             text-align: center;
             font-size: 20px;
             font-family: 'Playfair Display', Georgia, serif;
-            font-weight: 700;
+            font-weight: 800; /* Výraznější písmo */
             letter-spacing: 0.5px;
             margin-bottom: 4mm;
-            color: #1a1a1a;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 3mm;
+            color: #000000;
+            border-bottom: 2px solid #000000; /* Výrazná linka pod názvem */
+            padding-bottom: 2.5mm;
         }
 
         /* Hlavní obsahový prostor */
@@ -136,7 +177,7 @@
 
         .print-ingredients {
             width: 45%;
-            border-right: 1px dashed #cbd5e1;
+            border-right: 1.5px dashed #000000; /* Výrazná dělicí čára */
             padding-right: 2mm;
         }
 
@@ -147,11 +188,11 @@
 
         .print-section-title {
             font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
+            font-weight: 800; /* Extra bold */
+            letter-spacing: 1px;
             margin-bottom: 2.5mm;
             text-transform: uppercase;
-            color: #475569;
+            color: #000000; /* Sytě černá */
             font-family: 'Plus Jakarta Sans', sans-serif;
             display: flex;
             align-items: center;
@@ -160,30 +201,30 @@
 
         .print-section-title i {
             font-size: 10px;
-            color: #94a3b8;
+            color: #000000; /* Černé ikony pro viditelnost */
         }
 
-        /* Linky na psaní/text */
+        /* Výrazné linky receptu a textu pro tisk */
         .print-line {
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1.5px solid #000000; /* Tmavší a tlustší linka pro tiskárny */
             font-size: 11px;
             line-height: 19px;
             min-height: 19px;
             padding-left: 1px;
             white-space: normal;
             word-break: break-word;
-            color: #334155;
-            font-weight: 500;
+            color: #000000; /* Sytá černá */
+            font-weight: 700; /* Výrazné písmo na čtení */
         }
         
         .print-line.empty-line {
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid #444444; /* Výraznější prázdné řádky */
         }
 
         /* Box pro poznámky na dně karty */
         .print-notes-box {
-            border: 1px dashed #cbd5e1;
-            background: #fafaf9;
+            border: 1.5px dashed #000000; /* Kontrastní ohraničení */
+            background: #ffffff;
             height: 18mm;
             padding: 1.5mm;
             position: relative;
@@ -195,15 +236,15 @@
             font-size: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #64748b;
-            font-weight: 700;
+            color: #000000; /* Kontrastní text */
+            font-weight: 800;
             margin-bottom: 1mm;
         }
 
         /* --- MOBILNÍ ZOBRAZENÍ PREVIEW --- */
         @media (max-width: 991px) {
             body {
-                background: #f8fafc;
+                background: #0B0F19; /* Tmavé pozadí pro mobilní preview tiskové fronty */
             }
             .print-page {
                 width: 95%;
@@ -213,13 +254,18 @@
                 padding: 15px;
                 margin: 15px auto;
                 border-radius: 12px;
-                border: 1px solid #e2e8f0;
+                border: 1px solid #1E293B;
+                background: #151D30; /* Sladěno s tmavým režimem webu */
             }
             .recipe-card-print, .empty-card-print {
                 width: 100%;
                 height: auto;
                 min-height: 190mm;
-                padding: 6mm 6mm 5mm 15mm;
+                padding: 5mm 5mm 4mm 11mm;
+            }
+            .recipe-card-print {
+                background: #ffffff; /* Fyzická karta zůstává pro čtení bílá */
+                color: #000000;
             }
             .empty-card-print {
                 padding: 20px !important;
@@ -240,24 +286,25 @@
                 width: 297mm !important;
                 height: 210mm !important;
                 flex-direction: row !important;
-                padding: 10mm 12mm !important;
+                padding: 5mm 6mm !important;
                 margin: 0 !important;
                 box-shadow: none !important;
                 display: flex !important;
                 justify-content: space-between !important;
                 border: none !important;
                 border-radius: 0 !important;
+                background: white !important;
             }
 
             .recipe-card-print {
-                width: 133mm !important;
-                height: 190mm !important;
-                padding: 6mm 6mm 5mm 15mm !important;
+                width: 140mm !important;
+                height: 200mm !important;
+                padding: 5mm 5mm 4mm 11mm !important;
             }
 
             .empty-card-print {
-                width: 133mm !important;
-                height: 190mm !important;
+                width: 140mm !important;
+                height: 200mm !important;
                 display: flex !important;
             }
 
@@ -270,8 +317,8 @@
 
 <body>
 
-    <div class="no-print p-4 text-center bg-dark text-white shadow-sm">
-        <h4 class="fw-bold mb-2">Tiskový náhled a příprava kuchařky</h4>
+    <div class="no-print p-4 text-center shadow-sm">
+        <h4 class="mb-2">Tiskový náhled a příprava kuchařky</h4>
         <p class="text-white-50 small mb-3">Pro nejlepší výsledek v tiskovém dialogu zvolte orientaci <b>Na šířku (Landscape)</b> a v nastavení <b>vypněte okraje</b>.</p>
         <div class="d-flex justify-content-center gap-2">
             <button class="btn btn-warning px-4 fw-bold shadow-sm" onclick="window.print()">
@@ -316,11 +363,11 @@
 
         if (queue.length === 0) {
             container.innerHTML = `
-                <div class="p-5 text-center my-5 bg-white rounded shadow-sm max-width-md mx-auto" style="max-width: 500px;">
+                <div class="p-5 text-center my-5 bg-white rounded shadow-sm max-width-md mx-auto" style="max-width: 500px; border: 1px solid #1E293B;">
                     <i class="fa-solid fa-print text-muted fa-3x mb-3"></i>
-                    <h3 class="fw-bold">Tisková fronta je prázdná</h3>
+                    <h3 class="fw-bold text-dark">Tisková fronta je prázdná</h3>
                     <p class="text-muted small">Přidejte nejprve recepty do tiskové fronty kliknutím na tiskárnu na kartách receptů.</p>
-                    <a href="index.html" class="btn btn-primary mt-2">Zpět do kuchařky</a>
+                    <a href="index.html" class="btn btn-warning mt-2 fw-bold text-white px-4" style="background-color: #FF5A5F; border-color: #FF5A5F;">Zpět do kuchařky</a>
                 </div>`;
         } else {
             let htmlPages = "";
@@ -394,8 +441,6 @@
                 } else {
                     htmlPages += `
                         <div class="empty-card-print">
-                            <i class="fa-solid fa-scissors fa-2xl mb-3"></i>
-                            <div>Zde odstřihněte prázdnou A5 kartičku</div>
                         </div>
                     `;
                 }
